@@ -1,0 +1,59 @@
+// pirate wild-mage script for combat
+
+IF
+	!GlobalTimerNotExpired("J#Spell","LOCALS")
+	HaveSpell(WIZARD_SHIELD)
+THEN
+	RESPONSE #100
+		SetGlobalTimer("J#Spell","LOCALS",6)
+		Spell(Myself,WIZARD_SHIELD)
+END
+
+IF
+	!GlobalTimerNotExpired("J#Spell","LOCALS")
+	HaveSpell(WIZARD_HORROR)
+	See([GOODCUTOFF])
+THEN
+	RESPONSE #100
+		SetGlobalTimer("J#Spell","LOCALS",6)
+		Spell([GOODCUTOFF],WIZARD_HORROR)
+END
+
+IF
+	!GlobalTimerNotExpired("J#Spell","LOCALS")
+	HaveSpell(WIZARD_INVISIBILITY)
+	See("J#Pirat2")
+THEN
+	RESPONSE #100
+		SetGlobalTimer("J#Spell","LOCALS",6)
+		Spell("J#Pirat2",WIZARD_INVISIBILITY)
+END
+
+IF
+	!GlobalTimerNotExpired("J#Spell","LOCALS")
+	HaveSpell(WIZARD_SLEEP)
+	See([GOODCUTOFF])
+THEN
+	RESPONSE #100
+		SetGlobalTimer("J#Spell","LOCALS",6)
+		Spell([GOODCUTOFF],WIZARD_SLEEP)
+END
+
+IF
+	!GlobalTimerNotExpired("J#Spell","LOCALS")
+	HaveSpell(WIZARD_MAGIC_MISSILE)
+	See([GOODCUTOFF])
+THEN
+	RESPONSE #100
+		SetGlobalTimer("J#Spell","LOCALS",6)
+		Spell([GOODCUTOFF],WIZARD_MAGIC_MISSILE)
+END
+
+IF
+	!GlobalTimerNotExpired("J#Spell","LOCALS")
+	HaveSpell(WIZARD_BLUR)
+THEN
+	RESPONSE #100
+		SetGlobalTimer("J#Spell","LOCALS",6)
+		Spell(Myself,WIZARD_BLUR)
+END

@@ -1,0 +1,18 @@
+// Lighthouse area script
+
+IF
+	Global("J#PirateFight","GLOBAL",1)
+	!Exists("J#pirat2")
+	!Exists("J#pirat3")
+	!Exists("J#pirat4")
+	!Exists("J#pirat5")
+	!Exists("J#pirat6")
+THEN
+	RESPONSE #100
+		CreateCreature("J#pirat4",[530.264]%FACE_4%)
+		CreateCreature("J#pirat3",[469.259]%FACE_4%)
+		CreateCreature("J#pirat2",[406.338]%FACE_8%)
+		CreateCreature("J#pirat5",[513.307]%FACE_6%)
+		CreateCreature("J#pirat6",[492.332]%FACE_4%)
+		SetGlobal("J#PirateFight","GLOBAL",2)
+END

@@ -1,0 +1,42 @@
+/* Sil approaches the Pc if s/he comes from the pirates */
+
+
+IF
+	See([PC])
+	Global("J#SilMurder","GLOBAL",1)
+	Global("J#SilAsks","LOCALS",0)
+	Allegiance(Myself,NEUTRAL)
+THEN
+	RESPONSE #100
+		SetGlobal("J#SilAsks","LOCALS",1)
+		Dialogue([PC])
+END
+
+// Sil notices if sirines are attacked
+
+IF
+	AttackedBy([GOODCUTOFF],DEFAULT)
+	Global("J#SilEnemy","GLOBAL",0)
+THEN
+	RESPONSE #100
+		 SetGlobal("J#SilEnemy","GLOBAL",1)
+END
+
+IF
+		!Allegiance(Myself,ENEMY)
+		Allegiance("J#sirin1",ENEMY)
+THEN
+	RESPONSE #100
+		SetGlobal("J#SilEnemy","GLOBAL",1)
+		Enemy()
+END
+
+IF
+		!Allegiance(Myself,ENEMY)
+		Allegiance("J#sirin2",ENEMY)
+THEN
+	RESPONSE #100
+		SetGlobal("J#SilEnemy","GLOBAL",1)
+		Enemy()
+END
+

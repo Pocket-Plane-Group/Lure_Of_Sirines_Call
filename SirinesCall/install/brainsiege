@@ -1,0 +1,83 @@
+Why must everyone always storm a brain?  Wouldn't a methodical seige work better?
+
+Heh.  Fuck that.  Chaaaarge!
+
+
+A QUICK AND DIRTY STRONGHOLD MOD
+--------------------------------
+
+Okay, so I like strongholds, and having a cozy place to store treasure and stuff.
+
+In BG1, you aren't really powerful enough, or ready to settle down enough that
+a stronghold with guards and stuff would make sense.  I'd still like a place to
+hide out and recouperate after a particularly difficult fight.
+
+Ideally it'd also be available pretty quickly in the plot.  Say, after Mulahey?
+
+Could use XNewArea.2da to add it to the Tutu map.
+
+What do I want it to be?
+
+I want it to be a fast mod to make, ideally.
+
+Anyways, the details.  Keep 'em small and try to avoid bloat.  Right.
+
+Mulahey is defeated, and links to Tranzig lead the party to Beregost.  When they
+get there, he escapes!  He can cast Petrification, after all, so shadow door and
+dimension door wouldn't be out of the question, either.
+
+The PC is left without a link, but they loot his room, and find... a lead!  Yes,
+the bandits are camped out in the north-east, and there's also a random scribbling
+on the note.  A key word to--bah, no, that's too powerful and magical and crap.
+
+-----------
+
+AR3600.are has that lighthouse.  If I could make it so the doors aren't all
+busted up and stuff, it could be inhabitable.  That'd be neat.  Is it haunted?
+How does the PC go about taking shelter there?
+
+PIRATES.  Oh. My. God. So. Awesome.
+
+Okay, here's the story.  The kid is trapped in there as usual, by the worgs.
+The PC goes and slays them, and then some non-obvious pirates come out of the
+tower to see what's up.  They were startled by the kid that had suddenly run into
+their midst.  So anyways, they're amiable enough and let the kid go, and give you
+a mug of ale and send you on your way, too.
+
+If the PC is chatty, the pirates mention that they're lookouts for a shipping
+business in the region.  They guard supplies for stopovers and suchlike.  They
+also warn you to be on your guard for sirines, who've been quite troublesome
+lately.
+
+The kid goes back to the mum, and you get your reward as normal, and so on.
+
+Then when you meet Sil, the sirine near the golem cave, she says you've been
+fraternizing with the pirates, and claims you're one of them.  The PC can be all
+"Whu?" and then Sil will be like, "Dude, those're pirates, and they've been
+chopping up my sisters and stuff in their search for Black Alaric's stash," and
+CHARNAME is all like, "Shit, I'll kill them for you, okay?" and she's all "Sure,
+swoon swoon."
+
+Then it'd be neat if all the sirines in that map turned neutral forever after, in
+gratitude for your deed.  Plus you get the hideout to store stuff in.  Nifty.
+
+--------------
+
+Area list?
+
+lighthouse main floor
+AR2101 IWD
+
+lighthouse top floor
+AR0138 BG1 (will need to shrink, add flames, shrink walls)
+
+storage shed
+Kitchen Area from AR1302 BG2 (has stairs down)
+
+living area
+AR0150 BG1 (leads to...)
+AR1808 BG1, a small storage pantry
+
+basement of the shed
+AR2005 IWD
+

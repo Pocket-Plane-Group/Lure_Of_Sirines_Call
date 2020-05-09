@@ -1,0 +1,11 @@
+Todo
+- Adding doors to the lighthouse buildings.  This will make the download quite a bit bigger, since it's the entire FW3600.are tileset that needs to be changed.
+- Improving the upper floor of the lighthouse.  Currently it uses the top of Ramazith's tower.
+- Converting all tilesets to .tiz format. -- DONE
+- Adding custom audio
+- Expanding quests with Sil
+
+Bugs
+- Some sirines remain hostile after agreeing to aid Sil--FIXED
+- Sil's sirines go hostile for some reason?--FIXED
+

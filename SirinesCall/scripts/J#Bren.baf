@@ -1,0 +1,27 @@
+// Brennan walks to his mum.
+
+IF
+	!See("%tutu_var%Ardrou")
+	GlobalGT("J#TalkedPirate","GLOBAL",0)
+THEN
+	RESPONSE #100
+		MoveToObject("%tutu_var%Ardrou")
+END
+
+IF
+		Dead("%tutu_var%Ardrou")
+	GlobalGT("J#TalkedPirate","GLOBAL",0)
+THEN
+	RESPONSE #100
+		Enemy()
+		EscapeArea()
+END
+
+IF
+		Allegiance("%tutu_var%Ardrou",ENEMY)
+	GlobalGT("J#TalkedPirate","GLOBAL",0)
+THEN
+	RESPONSE #100
+		Enemy()
+		EscapeArea()
+END

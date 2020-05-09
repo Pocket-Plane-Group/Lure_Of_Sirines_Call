@@ -1,0 +1,74 @@
+//
+
+IF
+	Global("J#SilMurder","GLOBAL",0)
+	Global("J#SireneTreasure","GLOBAL",0)
+	PartyHasItem("%tutu_var%clck04")
+THEN
+	RESPONSE #100
+		SetGlobal("J#SireneTreasure","GLOBAL",1)
+END
+
+
+IF
+		Allegiance("sil",ENEMY)
+	Global("J#SilMurder","GLOBAL",1)
+THEN
+	RESPONSE #100
+		SetGlobal("J#SilMurder","GLOBAL",2)
+END
+
+IF
+		Dead("sil")
+	Global("J#SilMurder","GLOBAL",1)
+THEN
+	RESPONSE #100
+		SetGlobal("J#SilMurder","GLOBAL",2)
+END
+// Need to spawn the captain and Brennan if the worgs are dead
+
+IF
+	Global("WorgsDead","GLOBAL",3)
+	Global("J#SpawnBren","GLOBAL",0)
+THEN
+	RESPONSE #100
+		SetGlobal("J#SpawnBren","GLOBAL",1)
+		CreateCreature("J#Bren",[1081.2801]%FACE_2%)
+		CreateCreature("J#Pirat1",[1049.2759]%FACE_3%)
+END
+
+// Need to spawn the pirate captain and his crew if they've been betrayed
+
+/*
+IF
+	Global("J#SilMurder","GLOBAL",2)
+	Dead("sil")
+	PartyHasItem("%tutu_var%clck04")
+THEN
+	RESPONSE #100
+		SetGlobal("J#SilMurder","GLOBAL",3)
+		CreateCreature("J#pirat1",[343.1060]%FACE_8%)
+		CreateCreature("J#pirat2",[238.949]%FACE_12%)
+		CreateCreature("J#pirat3",[265.1049]%FACE_10%)
+		CreateCreature("J#pirat4",[369.1101]%FACE_6%)
+		CreateCreature("J#pirat5",[401.1078]%FACE_8%)
+		CreateCreature("J#pirat6",[322.1111]%FACE_8%)
+END
+
+*/
+
+IF
+	GlobalGT("J#SilMurder","GLOBAL",0)
+	PartyHasItem("%tutu_var%clck04")
+	Global("J#SireneTreasure","GLOBAL",0)
+THEN
+	RESPONSE #100
+		SetGlobal("J#SireneTreasure","GLOBAL",2)
+		SetGlobal("J#SilMurder","GLOBAL",3)
+		CreateCreature("J#pirat1",[343.1060]%FACE_8%)
+		CreateCreature("J#pirat2",[238.949]%FACE_12%)
+		CreateCreature("J#pirat3",[265.1049]%FACE_10%)
+		CreateCreature("J#pirat4",[369.1101]%FACE_6%)
+		CreateCreature("J#pirat5",[401.1078]%FACE_8%)
+		CreateCreature("J#pirat6",[322.1111]%FACE_8%)
+END

@@ -1,0 +1,53 @@
+// Need to turn neutral if Sil sets global to 1
+
+IF
+	OR(2)
+		AttackedBy([GOODCUTOFF],DEFAULT)
+		Heard("sirine",1)
+	Allegiance(Myself,NEUTRAL)
+THEN
+	RESPONSE #100
+		Shout(1)
+		SetGlobal("J#SirinesNeutral","LOCALS",1)
+		Enemy()
+END
+
+IF
+	G("J#PirateFight",3)
+	OR(2)
+		Name("J#sirin1",Myself)
+		Name("J#sirin2",Myself)
+THEN
+	RESPONSE #100
+		EscapeArea()
+END
+
+IF
+	AreaCheck("%Lighthouse%")
+	OR(3)
+		Allegiance("Sil",ENEMY)
+		Heard("Sil",1)
+		G("J#SilMurder",2)
+	!Allegiance(Myself,ENEMY)
+THEN
+	RESPONSE #100
+		SetGlobal("J#SirinesNeutral","LOCALS",1)
+		Enemy()
+END
+
+IF	G("J#TalkedSil",1)
+	Global("J#SilEnemy","GLOBAL",0)
+	!Allegiance("sil",ENEMY)
+	!G("J#SilMurder",2)
+	!Dead("sil")
+	!Allegiance(Myself,NEUTRAL)
+	!Allegiance(Myself,GOODCUTOFF)
+	AreaCheck("%Lighthouse%")
+	Global("J#SirinesNeutral","LOCALS",0)
+
+THEN
+	RESPONSE #100
+		SetGlobal("J#SirinesNeutral","LOCALS",1)
+		ChangeEnemyAlly(Myself,NEUTRAL)
+END
+

@@ -1,0 +1,1473 @@
+/* 
+Changes:
+-Ardrou will now give the correct dialogue if her son was saved without talking to her first
+-removed wrong string entries from J#Bren.CRE
+-fixed install bug for OSX: changed SirinesCall/tools/tileconv/macosx to SirinesCall/tools/tileconv/osx
+-fixed install bug for Linux by renaming the directory SirinesCall\tools\tileconv\linux to (...)unix
+-Mod won't install on Steam/GOG SoD if modmerge didn't run (Linux / OSX).
+-removing of doubled setup-tras
+-fixed crashing Lighthouse Area in BG:EE and EET for installed component "Extended Lighthouse Area"
+-g3_bgee_cpmvars.tpa corrected (Post dialogue Dynaheir, Jaheira - not important for this mod)
+-Update to WeiDU v243
+*/
+
+
+BACKUP ~sirinescall/backup~
+AUTHOR ~http://forums.pocketplane.net/index.php/topic,17901.0.html~ /* ~ghreyfain@pocketplane.net~ */
+
+VERSION ~v15~ //180131
+
+README ~sirinescall/install/sirine_readme.html~
+
+ALWAYS
+
+
+/* check for a ready SoD */
+
+ACTION_IF ((FILE_EXISTS ~dlc/sod-dlc.zip~) OR (FILE_EXISTS ~sod-dlc.zip~)) THEN BEGIN
+  FAIL ~Modmerge is required before mods can be installed on this game. Check the readme for more information and a link to download Modmerge.~
+END
+
+
+	/////////////////////////////////////
+	/* These actions are processed for every component: reading of variables */
+
+	ACTION_IF GAME_IS ~tutu tutu_totsc~ THEN BEGIN
+		/* Tell the player it is using Tutu stuff */
+		PRINT @1000
+		INCLUDE ~sirinescall/lib/g3_tutu_cpmvars.tpa~
+		INCLUDE ~sirinescall/lib/rr_tutubgt_addvars.tpa~
+		OUTER_SPRINT ~Lighthouse_bcs~ ~_AR3600~
+		OUTER_SPRINT ~J#sirin1~ ~J#sirin1~
+		OUTER_SPRINT ~EscapeArea_Move~ ~EscapeAreaMove("J#Hall",311,229,8)~
+		OUTER_SPRINT ~creatures_folder~ ~creatures~
+		OUTER_SPRINT ~Lighthouse_tis~ ~_AR3600~
+	END 
+
+	ACTION_IF GAME_IS ~bgt~ THEN BEGIN
+		/* Tell the player it is using BGT stuff */
+		PRINT @1001
+		INCLUDE ~sirinescall/lib/g3_bgt_cpmvars.tpa~ 
+		INCLUDE ~sirinescall/lib/rr_tutubgt_addvars.tpa~
+		OUTER_SPRINT ~Lighthouse_bcs~ ~AR9500~
+		OUTER_SPRINT ~J#sirin1~ ~J#sirin1~
+		OUTER_SPRINT ~EscapeArea_Move~ ~EscapeAreaMove("J#Hall",311,229,8)~
+		OUTER_SPRINT ~creatures_folder~ ~creatures~
+		OUTER_SPRINT ~Lighthouse_tis~ ~AR9500~
+	END
+
+	ACTION_IF GAME_IS ~bg1 totsc~ THEN BEGIN
+		PRINT ~Baldur's Gate detected~
+		INCLUDE ~sirinescall/lib/g3_bg_cpmvars.tpa~
+		OUTER_SPRINT ~Lighthouse_bcs~ ~AR3600~
+		OUTER_SPRINT ~J#sirin1~ ~J#siribg~
+		OUTER_SPRINT ~EscapeArea_Move~ ~EscapeArea()~
+		OUTER_SPRINT ~creatures_folder~ ~creatures/bg1~
+		
+		ACTION_IF GAME_IS ~totsc~ THEN BEGIN
+			INCLUDE ~sirinescall/lib/rr_totsc_addvars.tpa~
+			OUTER_SPRINT ~STARTDIALOGNOSET~ ~StartDialogueNoSet~
+		END
+
+		ACTION_IF GAME_IS ~bg1~ THEN BEGIN
+ 			INCLUDE ~sirinescall/lib/rr_bg1_addvars.tpa~
+			OUTER_SPRINT ~STARTDIALOGNOSET~ ~Dialogue~
+		END
+	END
+
+	/* BG:EE version! ---------------------- */
+	ACTION_IF GAME_IS ~bgee~ THEN BEGIN
+		/* Tell the player it is using bgee */
+		PRINT ~BG:EE detected...~
+		INCLUDE ~sirinescall/lib/g3_bgee_cpmvars.tpa~
+		INCLUDE ~sirinescall/lib/rr_tutubgt_addvars.tpa~
+		OUTER_SPRINT ~Lighthouse_bcs~ ~AR3600~
+		OUTER_SPRINT ~J#sirin1~ ~J#sirin1~
+		OUTER_SPRINT ~EscapeArea_Move~ ~EscapeAreaMove("J#Hall",311,229,8)~
+		OUTER_SPRINT ~creatures_folder~ ~creatures~
+	END
+  
+	/* EET version! ---------------------- */
+	ACTION_IF GAME_IS ~eet~ THEN BEGIN
+		/* Tell the player it is using eet */
+		PRINT ~EET detected...~
+		INCLUDE ~sirinescall/lib/eet_cpmvars.tpa~
+		INCLUDE ~sirinescall/lib/rr_tutubgt_addvars.tpa~
+		OUTER_SPRINT ~Lighthouse_bcs~ ~BG3600~
+		OUTER_SPRINT ~J#sirin1~ ~J#sirin1~
+		OUTER_SPRINT ~EscapeArea_Move~ ~EscapeAreaMove("J#Hall",311,229,8)~
+		OUTER_SPRINT ~creatures_folder~ ~creatures~
+	END
+
+	//////////////////////////////////////////////////////////////////////
+	/* all following actions are only processed ONCE for the whole mod, independent of un- and reinstalling of single components */
+	ACTION_IF !FILE_EXISTS ~sirinescall/Install/sirinescallreinstall.mrk~ BEGIN
+
+		// CD_STATE_NOTVALID - custom state from CamDawg
+		APPEND ~STATE.IDS~ ~0x80101FEF CD_STATE_NOTVALID~
+		UNLESS ~CD_STATE_NOTVALID~
+
+		ACTION_IF GAME_IS ~bg1 totsc~ THEN BEGIN
+			PRINT ~Baldur's Gate detected~
+			INCLUDE ~sirinescall/lib/c#_bg_npcjdlg.tpa~
+			APPEND ~action.ids~ ~160 ApplySpellRES(S:ResRef*,O:Target*)~       
+			UNLESS ~ApplySpellRES~
+			APPEND ~action.ids~ ~272 CreateVisualEffect(S:Object*,P:Location*)~
+			UNLESS ~CreateVisualEffect~
+
+
+
+
+			/* this doesn't work yet - could be activated if needed */
+			/*ACTION_IF ("%LANGUAGE%" STRING_EQUAL "polish") BEGIN
+			// Copies BG1-encoded tra files over the normal ones, for use with AUTO_TRA
+				DEFINE_ACTION_FUNCTION autotra_polishbg1 BEGIN
+					COPY ~sirinescall/translations/polish_Vanilla_BG1~ ~sirinescall/translations/autotra/polish~
+				END
+
+				LAF autotra_polishbg1 END
+
+
+				//setup.tra must be reloaded
+				LOAD_TRA "sirinescall/Translations/autotra/polish/setup.tra"
+
+			END*/
+			ACTION_IF "%LANGUAGE%" STR_EQ "polish" BEGIN
+				COPY 	"sirinescall/Translations/polish" "sirinescall/Translations/polish"
+					PATCH_INCLUDE "sirinescall/lib/BG1polish_fonts.tpa"
+				BUT_ONLY
+			END
+		END
+
+		/* BG:EE version! ---------------------- */
+
+		//ACTION_IF GAME_IS ~bgee eet~ THEN BEGIN
+		/* Copies UTF8-encoded tra files over the normal ones, for use with AUTO_TRA */
+		/*DEFINE_ACTION_FUNCTION autotra_workaround BEGIN
+			COPY ~sirinescall/translations/utf8/%LANGUAGE%~  ~sirinescall/translations/%LANGUAGE%~
+		END
+
+		LAF autotra_workaround END*/
+  
+		DEFINE_ACTION_FUNCTION autotra_workaround BEGIN
+			COPY ~sirinescall/translations/english~ ~sirinescall/translations/autotra/%LANGUAGE%~
+			COPY ~sirinescall/translations/%LANGUAGE%~ ~sirinescall/translations/autotra/%LANGUAGE%~
+		END
+
+		LAF autotra_workaround END
+
+		ACTION_DEFINE_ARRAY tra#reload BEGIN setup-sirinescall END
+		ACTION_DEFINE_ARRAY tra#noconvert BEGIN END
+
+		LAF HANDLE_CHARSETS
+			INT_VAR
+				infer_charset = 1
+			STR_VAR
+				tra_path = ~sirinescall/translations/autotra~
+				noconvert_array = tra#noconvert
+				reload_array = tra#reload
+				iconv_path = ~sirinescall/tools/iconv~
+		END
+
+		//TRAs declared in LANGUAGE must be reloaded
+		LOAD_TRA "sirinescall/Translations/autotra/%LANGUAGE%/setup-sirinescall.tra"
+		/*ACTION_IF GAME_IS ~bg1 totsc bgee~ THEN BEGIN
+		// BG1 and BG:EE: AR3600.are has the wrong script assigned 
+			COPY_EXISTING ~%Lighthouse%.are~ ~override~
+			WRITE_ASCII SCRIPT_AREA ~AR3600~
+			BUT_ONLY_IF_IT_CHANGES
+		END*/
+
+		//ACTION_IF GAME_IS ~eet~  BEGIN
+		//Same problem in EET
+			COPY_EXISTING ~%Lighthouse%.are~ ~override~
+				WRITE_EVALUATED_ASCII  0x94 ~%Lighthouse_bcs%~ #7
+			BUT_ONLY
+	
+		//END
+
+		COPY_EXISTING sw1h01.itm ~sirinescall/Install/sirinescallreinstall.mrk~
+	END 
+ 
+ 
+	INCLUDE ~SirinesCall/lib/a7_tools.tpa~ 
+ 
+ 
+	//Variables for the mos file folders
+	ACTION_IF GAME_IS ~bgee eet~ BEGIN 
+		OUTER_SPRINT "ee-folder" "ee"
+	END ELSE BEGIN
+		OUTER_SPRINT "ee-folder" "non-ee"
+	END
+
+	//Variables for OS specific things
+	ACTION_IF ~%WEIDU_OS%~ STRING_EQUAL_CASE ~win32~ BEGIN
+		OUTER_SPRINT os_slash ~\~
+		OUTER_SPRINT exe ~.exe~
+	END ELSE BEGIN
+		OUTER_SPRINT os_slash ~/~
+		OUTER_SPRINT exe ~~
+	END
+
+	//Sprint code for tis2bg2 executable
+	OUTER_SPRINT tis2bg2 ~sirinescall%os_slash%tools%os_slash%tis2bg2%os_slash%%WEIDU_OS%%os_slash%tis2bg2%exe%~
+
+
+END //ALWAYS
+
+
+
+
+/* --------------------------------------------- */
+
+
+
+
+AUTO_TRA "sirinescall/translations/autotra/%s"//%"
+
+LANGUAGE ~English~
+         ~english~
+         ~sirinescall/translations/english/setup-sirinescall.TRA~
+LANGUAGE ~Castellano (Castilian/Spanish)~
+         ~castilian~
+         ~sirinescall/translations/castilian/setup-sirinescall.TRA~
+LANGUAGE ~Francais (French)~
+         ~french~
+         ~sirinescall/translations/french/setup-sirinescall.TRA~
+LANGUAGE ~Deutsch (German)~
+         ~german~
+         ~sirinescall/translations/german/setup-sirinescall.TRA~
+LANGUAGE ~Italiano (Italian) - by Ilot (rtt.altervista.org)~
+         ~italian~
+         ~sirinescall/translations/italian/setup-sirinescall.TRA~
+LANGUAGE ~Polski (Polish) - by Regis~
+         ~polish~
+         ~sirinescall/translations/polish/setup-sirinescall.TRA~
+LANGUAGE ~D¢¤¤ˆŠ‚ (Russian) - Badgert, iopden & aerie.ru~
+         ~russian~
+         ~sirinescall/translations/russian/setup-sirinescall.tra~
+
+BEGIN @0
+
+
+// Dialogue
+COMPILE EVALUATE_BUFFER ~SirinesCall/Dialogue~
+// Scripts
+COMPILE EVALUATE_BUFFER ~SirinesCall/Scripts~
+
+   ACTION_IF GAME_IS ~tutu tutu_totsc bgt bgee eet~ THEN BEGIN
+COMPILE EVALUATE_BUFFER ~SirinesCall/scriptsar/J#sirin1.baf~
+END
+
+   ACTION_IF GAME_IS ~bg1 totsc~ THEN BEGIN
+COMPILE EVALUATE_BUFFER ~SirinesCall/scriptsar/J#siribg.baf~
+EXTEND_TOP ~J#Hall.bcs~ ~sirinescall/scriptsar/J#Hall_bgadd.baf~
+ EVALUATE_BUFFER
+END
+
+
+
+EXTEND_TOP ~%Lighthouse_bcs%.bcs~ ~sirinescall/scriptsar/_AR3600.baf~
+ EVALUATE_BUFFER
+
+
+
+
+// Areas
+COPY ~sirinescall/areas/storage~ ~override~
+     ~sirinescall/areas/lighthouse~ ~override~
+     ~sirinescall/areas/longhall~ ~override~
+
+
+/*  ACTION_IF GAME_IS ~tutu tutu_totsc~ THEN BEGIN
+	COPY ~sirinescall/areas/ar3600sr.bmp~ ~override/fw3600sr.bmp~
+ 
+// J#ligh.are 
+COPY_EXISTING ~J#ligh.are~ ~override~
+  LAUNCH_PATCH_FUNCTION  ~fj_are_structure~
+    INT_VAR
+    fj_type         = 2    //travel
+    fj_box_left     = 94
+    fj_box_top      = 485
+    fj_box_right    = 259
+    fj_box_bottom   = 573
+    fj_cursor_idx   = 30   //door
+    fj_vertex_0     = 94 + (485 << 16)
+    fj_vertex_1     = 259 + (485 << 16)
+    fj_vertex_2     = 259 + (573 << 16)
+    fj_vertex_3     = 94 + (573 << 16)
+    STR_VAR
+    fj_structure_type   = region
+    fj_name             = Door3600
+    fj_destination_area = FW3600
+    fj_destination_name = J#LighEx
+  END
+BUT_ONLY
+
+// J#hall.are 
+COPY_EXISTING ~J#hall.are~ ~override~
+	WRITE_EVALUATED_ASCII 0x8 ~%EBaldursGate_House2%~ #6
+  LAUNCH_PATCH_FUNCTION  ~fj_are_structure~
+    INT_VAR
+    fj_type         = 2    //travel
+    fj_box_left     = 222
+    fj_box_top      = 298
+    fj_box_right    = 309
+    fj_box_bottom   = 380
+    fj_cursor_idx   = 30   //door
+    fj_vertex_0     = 222 + (298 << 16)
+    fj_vertex_1     = 309 + (298 << 16)
+    fj_vertex_2     = 309 + (380 << 16)
+    fj_vertex_3     = 222 + (380 << 16)
+    STR_VAR
+    fj_structure_type   = region
+    fj_name             = Door3600
+    fj_destination_area = FW3600
+    fj_destination_name = J#HallEx
+  END
+BUT_ONLY
+
+// J#Stor.are 
+COPY_EXISTING ~J#Stor.are~ ~override~
+  LAUNCH_PATCH_FUNCTION  ~fj_are_structure~
+    INT_VAR
+    fj_type         = 2    //travel
+    fj_box_left     = 286
+    fj_box_top      = 343
+    fj_box_right    = 430
+    fj_box_bottom   = 470
+    fj_cursor_idx   = 30   //door
+    fj_vertex_0     = 286 + (343 << 16)
+    fj_vertex_1     = 430 + (343 << 16)
+    fj_vertex_2     = 430 + (470 << 16)
+    fj_vertex_3     = 286 + (470 << 16)
+    STR_VAR
+    fj_structure_type   = region
+    fj_name             = Door3600
+    fj_destination_area = FW3600
+    fj_destination_name = J#StorEx
+  END
+BUT_ONLY
+
+ END
+
+  ACTION_IF GAME_IS ~bgt~ THEN BEGIN
+	COPY ~sirinescall/areas/ar3600sr.bmp~ ~override/AR9500SR.BMP~
+
+// J#ligh.are 
+COPY_EXISTING ~J#ligh.are~ ~override~
+  LAUNCH_PATCH_FUNCTION  ~fj_are_structure~
+    INT_VAR
+    fj_type         = 2    //travel
+    fj_box_left     = 94
+    fj_box_top      = 485
+    fj_box_right    = 259
+    fj_box_bottom   = 573
+    fj_cursor_idx   = 30   //door
+    fj_vertex_0     = 94 + (485 << 16)
+    fj_vertex_1     = 259 + (485 << 16)
+    fj_vertex_2     = 259 + (573 << 16)
+    fj_vertex_3     = 94 + (573 << 16)
+    STR_VAR
+    fj_structure_type   = region
+    fj_name             = Door3600
+    fj_destination_area = AR9500
+    fj_destination_name = J#LighEx
+  END
+BUT_ONLY
+
+// J#hall.are 
+COPY_EXISTING ~J#hall.are~ ~override~
+	WRITE_EVALUATED_ASCII 0x8 ~%EBaldursGate_House2%~ #6
+  LAUNCH_PATCH_FUNCTION  ~fj_are_structure~
+    INT_VAR
+    fj_type         = 2    //travel
+    fj_box_left     = 222
+    fj_box_top      = 298
+    fj_box_right    = 309
+    fj_box_bottom   = 380
+    fj_cursor_idx   = 30   //door
+    fj_vertex_0     = 222 + (298 << 16)
+    fj_vertex_1     = 309 + (298 << 16)
+    fj_vertex_2     = 309 + (380 << 16)
+    fj_vertex_3     = 222 + (380 << 16)
+    STR_VAR
+    fj_structure_type   = region
+    fj_name             = Door3600
+    fj_destination_area = AR9500
+    fj_destination_name = J#HallEx
+  END
+BUT_ONLY
+
+// J#Stor.are 
+COPY_EXISTING ~J#Stor.are~ ~override~
+  LAUNCH_PATCH_FUNCTION  ~fj_are_structure~
+    INT_VAR
+    fj_type         = 2    //travel
+    fj_box_left     = 286
+    fj_box_top      = 343
+    fj_box_right    = 430
+    fj_box_bottom   = 470
+    fj_cursor_idx   = 30   //door
+    fj_vertex_0     = 286 + (343 << 16)
+    fj_vertex_1     = 430 + (343 << 16)
+    fj_vertex_2     = 430 + (470 << 16)
+    fj_vertex_3     = 286 + (470 << 16)
+    STR_VAR
+    fj_structure_type   = region
+    fj_name             = Door3600
+    fj_destination_area = AR9500
+    fj_destination_name = J#StorEx
+  END
+BUT_ONLY
+
+  END
+
+  ACTION_IF GAME_IS ~bg1 totsc bgee~ THEN BEGIN
+	COPY ~sirinescall/areas/ar3600sr.bmp~ ~override~
+
+// J#ligh.are 
+COPY_EXISTING ~J#ligh.are~ ~override~
+  LAUNCH_PATCH_FUNCTION  ~fj_are_structure~
+    INT_VAR
+    fj_type         = 2    //travel
+    fj_box_left     = 94
+    fj_box_top      = 485
+    fj_box_right    = 259
+    fj_box_bottom   = 573
+    fj_cursor_idx   = 30   //door
+    fj_vertex_0     = 94 + (485 << 16)
+    fj_vertex_1     = 259 + (485 << 16)
+    fj_vertex_2     = 259 + (573 << 16)
+    fj_vertex_3     = 94 + (573 << 16)
+    STR_VAR
+    fj_structure_type   = region
+    fj_name             = Door3600
+    fj_destination_area = AR3600
+    fj_destination_name = J#LighEx
+  END
+BUT_ONLY
+
+// J#hall.are 
+COPY_EXISTING ~J#hall.are~ ~override~
+	WRITE_EVALUATED_ASCII 0x8 ~%EBaldursGate_House2%~ #6
+  LAUNCH_PATCH_FUNCTION  ~fj_are_structure~
+    INT_VAR
+    fj_type         = 2    //travel
+    fj_box_left     = 222
+    fj_box_top      = 298
+    fj_box_right    = 309
+    fj_box_bottom   = 380
+    fj_cursor_idx   = 30   //door
+    fj_vertex_0     = 222 + (298 << 16)
+    fj_vertex_1     = 309 + (298 << 16)
+    fj_vertex_2     = 309 + (380 << 16)
+    fj_vertex_3     = 222 + (380 << 16)
+    STR_VAR
+    fj_structure_type   = region
+    fj_name             = Door3600
+    fj_destination_area = AR3600
+    fj_destination_name = J#HallEx
+  END
+BUT_ONLY
+
+// J#Stor.are 
+COPY_EXISTING ~J#Stor.are~ ~override~
+  LAUNCH_PATCH_FUNCTION  ~fj_are_structure~
+    INT_VAR
+    fj_type         = 2    //travel
+    fj_box_left     = 286
+    fj_box_top      = 343
+    fj_box_right    = 430
+    fj_box_bottom   = 470
+    fj_cursor_idx   = 30   //door
+    fj_vertex_0     = 286 + (343 << 16)
+    fj_vertex_1     = 430 + (343 << 16)
+    fj_vertex_2     = 430 + (470 << 16)
+    fj_vertex_3     = 286 + (470 << 16)
+    STR_VAR
+    fj_structure_type   = region
+    fj_name             = Door3600
+    fj_destination_area = AR3600
+    fj_destination_name = J#StorEx
+  END
+BUT_ONLY
+  END*/
+
+  
+//ACTION_IF GAME_IS ~eet~ THEN BEGIN
+	COPY ~sirinescall/areas/ar3600sr.bmp~ ~override/%Lighthouse%SR.bmp~
+
+/* J#ligh.are */
+COPY_EXISTING ~J#ligh.are~ ~override~
+  LAUNCH_PATCH_FUNCTION  ~fj_are_structure~
+    INT_VAR
+    fj_type         = 2    //travel
+    fj_box_left     = 94
+    fj_box_top      = 485
+    fj_box_right    = 259
+    fj_box_bottom   = 573
+    fj_cursor_idx   = 30   //door
+    fj_vertex_0     = 94 + (485 << 16)
+    fj_vertex_1     = 259 + (485 << 16)
+    fj_vertex_2     = 259 + (573 << 16)
+    fj_vertex_3     = 94 + (573 << 16)
+    STR_VAR
+    fj_structure_type   = region
+    fj_name             = Door3600
+    fj_destination_area = EVAL ~%Lighthouse%~
+    fj_destination_name = J#LighEx
+  END
+BUT_ONLY
+
+/* J#hall.are */
+COPY_EXISTING ~J#hall.are~ ~override~
+	WRITE_EVALUATED_ASCII 0x8 ~%EBaldursGate_House2%~ #6
+  LAUNCH_PATCH_FUNCTION  ~fj_are_structure~
+    INT_VAR
+    fj_type         = 2    //travel
+    fj_box_left     = 222
+    fj_box_top      = 298
+    fj_box_right    = 309
+    fj_box_bottom   = 380
+    fj_cursor_idx   = 30   //door
+    fj_vertex_0     = 222 + (298 << 16)
+    fj_vertex_1     = 309 + (298 << 16)
+    fj_vertex_2     = 309 + (380 << 16)
+    fj_vertex_3     = 222 + (380 << 16)
+    STR_VAR
+    fj_structure_type   = region
+    fj_name             = Door3600
+    fj_destination_area = EVAL ~%Lighthouse%~
+    fj_destination_name = J#HallEx
+  END
+BUT_ONLY
+
+/* J#Stor.are */
+COPY_EXISTING ~J#Stor.are~ ~override~
+  LAUNCH_PATCH_FUNCTION  ~fj_are_structure~
+    INT_VAR
+    fj_type         = 2    //travel
+    fj_box_left     = 286
+    fj_box_top      = 343
+    fj_box_right    = 430
+    fj_box_bottom   = 470
+    fj_cursor_idx   = 30   //door
+    fj_vertex_0     = 286 + (343 << 16)
+    fj_vertex_1     = 430 + (343 << 16)
+    fj_vertex_2     = 430 + (470 << 16)
+    fj_vertex_3     = 286 + (470 << 16)
+    STR_VAR
+    fj_structure_type   = region
+    fj_name             = Door3600
+    fj_destination_area = EVAL ~%Lighthouse%~
+    fj_destination_name = J#StorEx
+  END
+BUT_ONLY
+//  END
+
+
+/* adaption of wed-name für custom areas */
+
+ COPY_EXISTING ~J#ptry.are~ ~override~
+	WRITE_EVALUATED_ASCII 0x8 ~%CloakwoodMines_Storehouse%~ #6
+
+	
+COPY_EXISTING ~%Lighthouse%.are~ ~override~
+GET_OFFSET_ARRAY actors_array ARE_V10_ACTORS 
+PHP_EACH actors_array AS actors_num => actors_offset BEGIN
+	READ_ASCII actors_offset actors_name (32) NULL
+	READ_SHORT actors_offset+0x20 actors_pos_x
+	READ_ASCII actors_offset+0x80 actors_filename (32) NULL
+	PATCH_IF ((~%actors_name%~ STR_EQ  ~Sil~) AND (~%actors_pos_x%~ = 387) AND (~%actors_filename%~ STR_EQ  ~%tutu_var%sirine~)) BEGIN
+		WRITE_ASCII actors_offset+0x80 "J#sirin1" #8
+	END
+	PATCH_IF ((~%actors_name%~ STR_EQ  ~Sil~) AND (~%actors_pos_x%~ = 416) AND (~%actors_filename%~ STR_EQ ~%tutu_var%sirine~)) BEGIN
+		WRITE_ASCII actors_offset+0x80 "J#sirin2" #8
+	END
+	
+END
+/*
+READ_SHORT 0x54 "npc_offset"
+READ_SHORT 0x58 "npc_num"
+SET "sirinepatch1" = 0
+SET "sirinepatch2" = 0
+WHILE ("%npc_num%" > 0)
+ BEGIN
+  SET "npc_num" = ("%npc_num%" - 1)
+  READ_ASCII ("%npc_offset%" + ("%npc_num%" * 272)) "name"
+  READ_ASCII ("%npc_offset%" + ("%npc_num%" * 272) + 128) "filename"
+  PATCH_IF (("%name%" STRING_COMPARE_CASE "Sil" = 0) AND ("%filename%" STRING_COMPARE_CASE "%tutu_var%sirine" = 0) AND ("%sirinepatch1%" = 0))
+   BEGIN
+    SET "sirinepatch1" = 1
+    WRITE_ASCII ("%npc_offset%" + ("%npc_num%" * 272) - 272 + 128) "J#sirin1"
+   END
+  PATCH_IF (("%name%" STRING_COMPARE_CASE "Sil" = 0) AND ("%filename%" STRING_COMPARE_CASE "%tutu_var%sirine" = 0) AND ("%sirinepatch2%" = 0))
+   BEGIN
+    SET "sirinepatch2" = 1
+    WRITE_ASCII ("%npc_offset%" + ("%npc_num%" * 272) + 128) "J#sirin2"
+   END
+ END*/
+
+// Changing the info triggers to travel triggers for the lighthouse and aux. buildings
+GET_OFFSET_ARRAY region_array ARE_V10_REGIONS
+PHP_EACH region_array AS region_num => region_offset BEGIN
+		READ_ASCII region_offset region_name (32) NULL
+		READ_SHORT region_offset+0x22 region_bbx_min 
+		PATCH_IF (~%region_name%~ STR_EQ ~InfoLite~)
+		BEGIN
+			WRITE_BYTE region_offset+0x20  2
+			WRITE_SHORT region_offset+0x34 30
+			WRITE_ASCII region_offset+0x38 ~J#Ligh~ #6
+			WRITE_ASCII region_offset+0x40 ~J#3600Ex~ #8
+			WRITE_LONG region_offset+0x64 0
+		END
+		PATCH_IF ((~%region_name%~ STR_EQ ~InfoHouse~) AND (~%region_bbx_min%~ = 1086)) BEGIN
+			WRITE_BYTE region_offset+0x20  2
+			WRITE_SHORT region_offset+0x34 30
+			WRITE_ASCII region_offset+0x38 ~J#Hall~ #6
+			WRITE_ASCII region_offset+0x40 ~J#3600Ex~ #8
+			WRITE_LONG region_offset+0x64 0
+		END
+		PATCH_IF ((~%region_name%~ STR_EQ ~InfoHouse~) AND (~%region_bbx_min%~ = 708)) BEGIN
+			WRITE_BYTE region_offset+0x20  2
+			WRITE_SHORT region_offset+0x34 30
+			WRITE_ASCII region_offset+0x38 ~J#Stor~ #6
+			WRITE_ASCII region_offset+0x40 ~J#3600Ex~ #8
+			WRITE_LONG region_offset+0x64 0
+		END
+END
+/*
+READ_SHORT 0x5a "trig_num"
+READ_SHORT 0x5c "trig_off"
+SET "trigpatch1" = 0
+SET "trigpatch2" = 0
+WHILE ("%trig_num%" > 1)
+ BEGIN
+  SET "trig_num" = ("%trig_num%" - 1)
+  READ_ASCII ("%trig_off%" + ("%trig_num%" * 196)) "trigname"
+  PATCH_IF (("%trigname%" STRING_COMPARE_CASE "infolite") = 0)
+   BEGIN
+    WRITE_BYTE ("%trig_off%" + ("%trig_num%" * 196) + 32) 2
+    WRITE_SHORT ("%trig_off%" + ("%trig_num%" * 196) + 52) 30
+    WRITE_ASCII ("%trig_off%" + ("%trig_num%" * 196) + 56) ~J#Ligh~
+    WRITE_ASCII ("%trig_off%" + ("%trig_num%" * 196) + 64) ~J#3600Ex~
+    WRITE_LONG ("%trig_off%" + ("%trig_num%" * 196) + 100) 0
+   END
+  PATCH_IF (("%trigname%" STRING_COMPARE_CASE "infohous") = 0 AND ("%trigpatch1%" = 0))
+   BEGIN
+    SET "trigpatch1" = 1
+    WRITE_BYTE ("%trig_off%" + ("%trig_num%" * 196) + 32 - 196) 2
+    WRITE_SHORT ("%trig_off%" + ("%trig_num%" * 196) + 52 - 196) 30
+    WRITE_ASCII ("%trig_off%" + ("%trig_num%" * 196) + 56 - 196) ~J#Hall~
+    WRITE_ASCII ("%trig_off%" + ("%trig_num%" * 196) + 64 - 196) ~J#3600Ex~
+    WRITE_LONG ("%trig_off%" + ("%trig_num%" * 196) + 100 - 196) 0
+   END
+  PATCH_IF (("%trigname%" STRING_COMPARE_CASE "infohous") = 0 AND ("%trigpatch2%" = 0))
+   BEGIN
+    SET "trigpatch2" = 1
+    WRITE_BYTE ("%trig_off%" + ("%trig_num%" * 196) + 32) 2
+    WRITE_SHORT ("%trig_off%" + ("%trig_num%" * 196) + 52) 30
+    WRITE_ASCII ("%trig_off%" + ("%trig_num%" * 196) + 56) ~J#Stor~
+    WRITE_ASCII ("%trig_off%" + ("%trig_num%" * 196) + 64) ~J#3600Ex~
+    WRITE_LONG ("%trig_off%" + ("%trig_num%" * 196) + 100) 0
+   END
+ END*/
+// Adding entry points from the lighthouse and aux. buildings
+/*READ_SHORT ~0x058~ ~#ofActor~
+READ_SHORT ~0x054~ ~actorOff~
+READ_SHORT ~0x05a~ ~#ofTrigg~
+READ_SHORT ~0x05c~ ~triggOff~
+READ_SHORT ~0x064~ ~#ofSpawn~
+READ_SHORT ~0x060~ ~spawnOff~
+READ_SHORT ~0x06c~ ~#ofEntra~
+READ_SHORT ~0x068~ ~entraOff~
+READ_SHORT ~0x074~ ~#ofConta~
+READ_SHORT ~0x070~ ~contaOff~
+READ_SHORT ~0x076~ ~#ofItems~
+READ_SHORT ~0x078~ ~itemsOff~
+READ_SHORT ~0x080~ ~#ofVerti~
+READ_SHORT ~0x07c~ ~vertiOff~
+READ_SHORT ~0x082~ ~#ofAmbia~
+READ_SHORT ~0x084~ ~ambiaOff~
+READ_SHORT ~0x08c~ ~#ofVaria~
+READ_SHORT ~0x088~ ~variaOff~
+READ_SHORT ~0x09c~ ~#ofExplo~
+READ_SHORT ~0x0A0~ ~exploOff~
+READ_SHORT ~0x0A4~ ~#ofDoors~
+READ_SHORT ~0x0A8~ ~doorsOff~
+READ_SHORT ~0x0AC~ ~#ofAnima~
+READ_SHORT ~0x0B0~ ~animaOff~
+READ_SHORT ~0x0B4~ ~#ofTiled~
+READ_SHORT ~0x0B8~ ~tiledOff~
+READ_SHORT ~0x0BC~ ~songsOff~
+READ_SHORT ~0x0C0~ ~restcOff~
+READ_SHORT ~0x0C8~ ~#ofAutom~
+READ_SHORT ~0x0C4~ ~automOff~
+WRITE_SHORT 0x06c (~%#ofEntra%~ + 3)
+WRITE_SHORT 0x070 (~%contaOff%~ + 312)
+WRITE_SHORT 0x078 (~%itemsOff%~ + 312)
+WRITE_SHORT 0x07c (~%vertiOff%~ + 312)
+WRITE_SHORT 0x084 (~%ambiaOff%~ + 312)
+WRITE_SHORT 0x088 (~%variaOff%~ + 312)
+WRITE_SHORT 0x0A0 (~%exploOff%~ + 312)
+WRITE_SHORT 0x0A8 (~%doorsOff%~ + 312)
+WRITE_SHORT 0x0B0 (~%animaOff%~ + 312)
+WRITE_SHORT 0x0B8 (~%tiledOff%~ + 312)
+WRITE_SHORT 0x0BC (~%songsOff%~ + 312)
+WRITE_SHORT 0x0C0 (~%restcOff%~ + 312)
+PATCH_IF (~%automOff%~ > 0)
+ THEN
+  BEGIN
+   WRITE_SHORT 0x0C4 (~%automOff%~ + 312)
+  END
+INSERT_BYTES (~%entraOff%~+ ~%#ofEntra%~ * 104) 312
+WRITE_ASCII (~%entraOff%~ + ~%#ofEntra%~ * 104 + 0) ~J#LighEx~
+WRITE_ASCII (~%entraOff%~ + ~%#ofEntra%~ * 104 + 8) ~~
+WRITE_LONG (~%entraOff%~ + ~%#ofEntra%~ * 104 + 32) 914
+WRITE_LONG (~%entraOff%~ + ~%#ofEntra%~ * 104 + 34) 2760
+WRITE_LONG (~%entraOff%~ + ~%#ofEntra%~ * 104 + 36) 14
+WRITE_ASCII (~%entraOff%~ + ~%#ofEntra%~ * 104 + 104) ~J#HallEx~
+WRITE_ASCII (~%entraOff%~ + ~%#ofEntra%~ * 104 + 112) ~~
+WRITE_LONG (~%entraOff%~ + ~%#ofEntra%~ * 104 + 136) 1059
+WRITE_LONG (~%entraOff%~ + ~%#ofEntra%~ * 104 + 138) 2777
+WRITE_LONG (~%entraOff%~ + ~%#ofEntra%~ * 104 + 140) 2
+WRITE_ASCII (~%entraOff%~ + ~%#ofEntra%~ * 104 + 208) ~J#StorEx~
+WRITE_ASCII (~%entraOff%~ + ~%#ofEntra%~ * 104 + 216) ~~
+WRITE_LONG (~%entraOff%~ + ~%#ofEntra%~ * 104 + 240) 844
+WRITE_LONG (~%entraOff%~ + ~%#ofEntra%~ * 104 + 242) 2845
+WRITE_LONG (~%entraOff%~ + ~%#ofEntra%~ * 104 + 244) 12*/
+
+LPF fj_are_structure
+    INT_VAR
+    fj_loc_x       = 914
+    fj_loc_y       = 2760
+    fj_orientation = 14
+    STR_VAR
+    fj_structure_type = entrance
+    fj_name           = J#LighEx
+END
+LPF fj_are_structure
+    INT_VAR
+    fj_loc_x       = 1059
+    fj_loc_y       = 2777
+    fj_orientation = 2
+    STR_VAR
+    fj_structure_type = entrance
+    fj_name           = J#HallEx
+END
+LPF fj_are_structure
+    INT_VAR
+    fj_loc_x       = 844
+    fj_loc_y       = 2845
+    fj_orientation = 12
+    STR_VAR
+    fj_structure_type = entrance
+    fj_name           = J#StorEx
+END
+
+
+/*
+//Prepare for the area modification.
+//---------------------------------DO NOT ALTER FROM HERE TO THE FOLLOWING BREAK.
+READ_SHORT ~0x058~ ~#ofActor~
+READ_SHORT ~0x054~ ~actorOff~
+READ_SHORT ~0x05a~ ~#ofTrigg~
+READ_SHORT ~0x05c~ ~triggOff~
+READ_SHORT ~0x064~ ~#ofSpawn~
+READ_SHORT ~0x060~ ~spawnOff~
+READ_SHORT ~0x06c~ ~#ofEntra~
+READ_SHORT ~0x068~ ~entraOff~
+READ_SHORT ~0x074~ ~#ofConta~
+READ_SHORT ~0x070~ ~contaOff~
+READ_SHORT ~0x076~ ~#ofItems~
+READ_SHORT ~0x078~ ~itemsOff~
+READ_SHORT ~0x080~ ~#ofVerti~
+READ_SHORT ~0x07c~ ~vertiOff~
+READ_SHORT ~0x082~ ~#ofAmbia~
+READ_SHORT ~0x084~ ~ambiaOff~
+READ_SHORT ~0x08c~ ~#ofVaria~
+READ_SHORT ~0x088~ ~variaOff~
+READ_SHORT ~0x09c~ ~#ofExplo~
+READ_SHORT ~0x0A0~ ~exploOff~
+READ_SHORT ~0x0A4~ ~#ofDoors~
+READ_SHORT ~0x0A8~ ~doorsOff~
+READ_SHORT ~0x0AC~ ~#ofAnima~
+READ_SHORT ~0x0B0~ ~animaOff~
+READ_SHORT ~0x0B4~ ~#ofTiled~
+READ_SHORT ~0x0B8~ ~tiledOff~
+READ_SHORT ~0x0BC~ ~songsOff~
+READ_SHORT ~0x0C0~ ~restcOff~
+READ_SHORT ~0x0C8~ ~#ofAutom~
+READ_SHORT ~0x0C4~ ~automOff~
+//Increase the number of TRIGGERS and correct the offsets
+WRITE_SHORT 0x05a (~%#ofTrigg%~ + 1)
+WRITE_SHORT 0x060 (~%spawnOff%~ + 196)
+WRITE_SHORT 0x068 (~%entraOff%~ + 196)
+WRITE_SHORT 0x070 (~%contaOff%~ + 196)
+WRITE_SHORT 0x078 (~%itemsOff%~ + 196)
+WRITE_SHORT 0x07c (~%vertiOff%~ + 196)
+WRITE_SHORT 0x084 (~%ambiaOff%~ + 196)
+WRITE_SHORT 0x088 (~%variaOff%~ + 196)
+WRITE_SHORT 0x0A8 (~%doorsOff%~ + 196)
+//Complete the prep work by adding a bunch of blank bytes.
+INSERT_BYTES (~%triggOff%~ + ~%#ofTrigg%~ * 196) 196
+//Prep work is done.
+//-----------------------------DO NOT ALTER ANYTHING ABOVE HERE TO THE TOP BREAK.
+
+//Set up the vertices you'll be adding.
+WRITE_SHORT 0x080 (~%#ofVerti%~ + 4)
+//NOTE:  YOU CAN CHANGE THE "8" TO HOWEVER NUMBER OF VERTICES YOU ARE
+// ADDING FOR YOUR TRIGGER.
+INSERT_BYTES (~%vertiOff%~ + ~%#ofVerti%~ * 4 + 196) 16
+//In the above two lines, only change the "32".  That numeral should be
+//THE NUMBER OF VERTICES YOU'RE ADDING TIMES 4.
+
+//Correct the offsets
+WRITE_SHORT 0x0A0 (~%exploOff%~ + 212)
+WRITE_SHORT 0x0B0 (~%animaOff%~ + 212)
+WRITE_SHORT 0x0B8 (~%tiledOff%~ + 212)
+WRITE_SHORT 0x0BC (~%songsOff%~ + 212)
+WRITE_SHORT 0x0C0 (~%restcOff%~ + 212)
+PATCH_IF (~%automOff%~ > 0)
+ THEN
+  BEGIN
+   WRITE_SHORT 0x0C4 (~%automOff%~ + 212)
+  END
+//IN THE ABOVE SECTION, THE "228"s CAN BE CHANGED.
+//IT SHOULD BE (196 + (~#newVertices~ * 4)), so this example adds 8 vertices.
+//196 + 8*4 = 228.
+
+
+//-------------------------------------INSERT SPECIFICS BELOW.
+//Now, you can start adding in the actual code for whatever you are inserting.
+
+//Name
+WRITE_ASCII (~%triggOff%~ + ~%#ofTrigg%~ * 196) ~DoorHall~
+WRITE_ASCII (~%triggOff%~ + ~%#ofTrigg%~ * 196 + 8) ~~
+WRITE_ASCII (~%triggOff%~ + ~%#ofTrigg%~ * 196 + 16) ~~
+WRITE_ASCII (~%triggOff%~ + ~%#ofTrigg%~ * 196 + 24) ~~
+
+//Trigger Type
+WRITE_SHORT (~%triggOff%~ + ~%#ofTrigg%~ * 196 + 32) 02
+//01=Info
+//02=Travel
+//03=Proximity
+
+//Trigger Icon
+WRITE_SHORT (~%triggOff%~ + ~%#ofTrigg%~ * 196 + 52) 30
+//22=Info Question Mark
+//28=Inside Exit (stair)
+//30=Outside Exit (door)
+
+//Destination Area RESREF
+  WRITE_ASCII  (~%triggOff%~ + ~%#ofTrigg%~ * 196 + 56) ~J#Hall~
+
+//Exit point
+  WRITE_ASCII (~%triggOff%~ + ~%#ofTrigg%~ * 196 + 64) ~J#3600Ex~
+
+//Flags:
+WRITE_LONG (~%triggOff%~ + ~%#ofTrigg%~ * 196 + 96) 00
+//04=Party Required
+
+//Trigger Text
+WRITE_LONG (~%triggOff%~ + ~%#ofTrigg%~ * 196 + 100) 0
+//Replace the "5185" with your chosen dialog string for Info Points.
+//You can use SAY here, just replace "WRITE_LONG" with "SAY" and "5185" with "@#"
+
+//Trap Detection %
+WRITE_LONG (~%triggOff%~ + ~%#ofTrigg%~ * 196 + 104) 00
+
+//Trap Removal %
+WRITE_LONG (~%triggOff%~ + ~%#ofTrigg%~ * 196 + 106) 00
+
+//Is Trapped Flag
+WRITE_LONG (~%triggOff%~ + ~%#ofTrigg%~ * 196 + 108) 00
+//0=no
+//1=yes
+
+//Trap Already Detected Flag
+WRITE_LONG (~%triggOff%~ + ~%#ofTrigg%~ * 196 + 110) 00
+//same as above?
+
+//Trap Location:
+WRITE_LONG (~%triggOff%~ + ~%#ofTrigg%~ * 196 + 112) 244
+WRITE_LONG (~%triggOff%~ + ~%#ofTrigg%~ * 196 + 114) 746
+
+//Key Type
+  WRITE_ASCII  (~%triggOff%~ + ~%#ofTrigg%~ * 196 + 116) ~~
+
+//Associated Script
+  WRITE_ASCII  (~%triggOff%~ + ~%#ofTrigg%~ * 196 + 124) ~~
+
+//Associated Dialog
+  WRITE_ASCII  (~%triggOff%~ + ~%#ofTrigg%~ * 196 + 188) ~~
+
+//Now, we've got to set up the vertices.  I suggest you use IETME to make the graphical
+// representation, then view the numbers with NI
+//bounding box:
+WRITE_LONG (~%triggOff%~ + ~%#ofTrigg%~ * 196 + 34) 1089
+WRITE_LONG (~%triggOff%~ + ~%#ofTrigg%~ * 196 + 36) 2659
+WRITE_LONG (~%triggOff%~ + ~%#ofTrigg%~ * 196 + 38) 1122
+WRITE_LONG (~%triggOff%~ + ~%#ofTrigg%~ * 196 + 40) 2753
+//CHANGE YOUR POINTS TO THE BOUNDING BOX.
+//#vertices
+WRITE_SHORT (~%triggOff%~ + ~%#ofTrigg%~ * 196 + 42) 5
+//CHANGE THE "8" TO HOWEVER NUMBER OF NEW VERTICES YOU'LL BE ADDING.
+//vertex index
+WRITE_LONG (~%triggOff%~ + ~%#ofTrigg%~ * 196 + 44) ~%#ofVerti%~
+
+//Now, write the new vertices.
+WRITE_SHORT (~%vertiOff%~ + ~%#ofVerti%~ * 4 + 196) 1089
+WRITE_SHORT (~%vertiOff%~ + ~%#ofVerti%~ * 4 + 196 + 2) 2658
+WRITE_SHORT (~%vertiOff%~ + ~%#ofVerti%~ * 4 + 196 + 4) 1089
+WRITE_SHORT (~%vertiOff%~ + ~%#ofVerti%~ * 4 + 196 + 6) 2723
+WRITE_SHORT (~%vertiOff%~ + ~%#ofVerti%~ * 4 + 196 + 8) 1122
+WRITE_SHORT (~%vertiOff%~ + ~%#ofVerti%~ * 4 + 196 + 10) 2753
+WRITE_SHORT (~%vertiOff%~ + ~%#ofVerti%~ * 4 + 196 + 12) 1122
+WRITE_SHORT (~%vertiOff%~ + ~%#ofVerti%~ * 4 + 196 + 14) 2687
+WRITE_SHORT (~%vertiOff%~ + ~%#ofVerti%~ * 4 + 196 + 16) 1089
+WRITE_SHORT (~%vertiOff%~ + ~%#ofVerti%~ * 4 + 196 + 18) 2658
+//Of course, you can alter the points above to match your trigger
+//as well as add new points, AS LONG AS EVERYTHING FOLLOWS THE PATTERN!
+*/
+
+
+
+
+// Creatures
+
+COPY_EXISTING ~%tutu_var%ardrou.cre~ ~override~
+WRITE_EVALUATED_ASCII 0x280 ~%tutu_var%Ardrou~ #8
+WRITE_EVALUATED_ASCII 0x248 ~%tutu_var%SHOUT~ #8
+WRITE_EVALUATED_ASCII 0x258 ~%tutu_scriptr%UNENEMY~ #8
+
+ACTION_IF GAME_IS ~tutu tutu_totsc bgt bgee eet~ THEN BEGIN
+COPY_EXISTING ~%tutu_scripts%irine_a.cre~ ~override~
+              ~%tutu_scripts%irine_b.cre~ ~override~
+              ~%tutu_scripts%irine02.cre~ ~override~
+              ~%tutu_var%sirine.cre~ ~override~
+WRITE_EVALUATED_ASCII 0x250 ~%J#sirin1%~ #8
+END
+
+//give Sil a script so she can call for help if attacked
+COPY_EXISTING ~%tutu_var%sil.cre~ ~override~
+WRITE_EVALUATED_ASCII 0x250 ~J#sirin0~ #8   // Assigns the script as Class script
+BUT_ONLY_IF_IT_CHANGES
+
+COPY ~sirinescall/creatures/J#Bren.CRE~ ~override/J#Bren.CRE~ 
+   SAY NAME1 @1
+   SAY NAME2 @1   
+WRITE_EVALUATED_ASCII 0x248 ~%tutu_var%SHOUT~ #8
+WRITE_EVALUATED_ASCII 0x258 ~%tutu_scriptr%UNENEMY~ #8
+
+COPY ~sirinescall/%creatures_folder%/J#PIRAT1.CRE~ ~override/J#PIRAT1.CRE~  
+   SAY NAME1 @2
+   SAY NAME2 @2    
+WRITE_EVALUATED_ASCII 0x250 ~%tutu_scripts%HOUTDLG~ #8
+WRITE_EVALUATED_ASCII 0x268 ~%tutu_scriptw%TASIGHT~ #8
+	REPLACE_CRE_ITEM ~%tutu_var%leat05~ #0 #0 #0 ~NONE~ ~ARMOR~    
+	REPLACE_CRE_ITEM ~%tutu_var%sw1h20~ #0 #0 #0 ~IDENTIFIED~ ~WEAPON1~ EQUIP                    // replacing tutu items
+BUT_ONLY_IF_IT_CHANGES
+
+COPY ~sirinescall/%creatures_folder%/J#PIRAT2.CRE~ ~override/J#PIRAT2.CRE~  
+   SAY NAME1 @3
+   SAY NAME2 @3  
+WRITE_EVALUATED_ASCII 0x268 ~%tutu_scriptw%TASIGHT~ #8
+	REPLACE_CRE_ITEM ~%tutu_var%leat03~ #0 #0 #0 ~UNDROPPABLE~ ~ARMOR~                                // this is the new change
+	REPLACE_CRE_ITEM ~%tutu_var%sw1h07~ #0 #0 #0 ~IDENTIFIED~ ~WEAPON1~ EQUIP                    // replacing tutu items
+	REPLACE_CRE_ITEM ~%tutu_var%dagg01~ #0 #0 #0 ~IDENTIFIED~ ~SHIELD~                                  // and keeping the same item flags
+BUT_ONLY_IF_IT_CHANGES
+
+COPY ~sirinescall/%creatures_folder%/J#PIRAT3.CRE~ ~override/J#PIRAT3.CRE~ 
+   SAY NAME1 @3
+   SAY NAME2 @3    
+WRITE_EVALUATED_ASCII 0x268 ~%tutu_scriptw%TASIGHT~ #8
+	REPLACE_CRE_ITEM ~%tutu_var%helm10~ #0 #0 #0 ~IDENTIFIED~ ~HELMET~                                 // and so on
+	REPLACE_CRE_ITEM ~%tutu_var%chan01~ #0 #0 #0 ~IDENTIFIED~ ~ARMOR~
+	REPLACE_CRE_ITEM ~%tutu_var%sw1h01~ #0 #0 #0 ~IDENTIFIED~ ~WEAPON1~ EQUIP
+BUT_ONLY_IF_IT_CHANGES
+
+COPY ~sirinescall/%creatures_folder%/J#PIRAT4.CRE~ ~override/J#PIRAT4.CRE~ 
+   SAY NAME1 @3
+   SAY NAME2 @3    
+WRITE_EVALUATED_ASCII 0x268 ~%tutu_scriptw%TASIGHT~ #8
+	REPLACE_CRE_ITEM ~%tutu_var%shld10~ #0 #0 #0 ~IDENTIFIED~ ~SHIELD~
+BUT_ONLY_IF_IT_CHANGES
+
+COPY ~sirinescall/%creatures_folder%/J#PIRAT5.CRE~ ~override/J#PIRAT5.CRE~ 
+   SAY NAME1 @3
+   SAY NAME2 @3    
+WRITE_EVALUATED_ASCII 0x268 ~%tutu_scriptw%TASIGHT~ #8
+	REPLACE_CRE_ITEM ~%tutu_var%chan02~ #0 #0 #0 ~UNDROPPABLE~ ~ARMOR~			
+	REPLACE_CRE_ITEM ~%tutu_var%bow05~ #0 #0 #0 ~IDENTIFIED~ ~WEAPON1~ EQUIP TWOHANDED
+	REPLACE_CRE_ITEM ~%tutu_var%sw1h20~ #0 #0 #0 ~IDENTIFIED~ ~WEAPON2~
+	REPLACE_CRE_ITEM ~%tutu_var%arow01~ #20 #0 #0 ~IDENTIFIED~ ~QUIVER1~
+BUT_ONLY_IF_IT_CHANGES
+
+COPY ~sirinescall/%creatures_folder%/J#PIRAT6.CRE~ ~override/J#PIRAT6.CRE~
+   SAY NAME1 @3
+   SAY NAME2 @3 
+WRITE_EVALUATED_ASCII 0x268 ~%tutu_scriptw%TASIGHT~ #8
+	REPLACE_CRE_ITEM ~%tutu_var%helm01~ #0 #0 #0 ~IDENTIFIED~ ~HELMET~
+	REPLACE_CRE_ITEM ~%tutu_var%leat02~ #0 #0 #0 ~UNDROPPABLE~ ~ARMOR~
+	REPLACE_CRE_ITEM ~%tutu_var%dagg05~ #10 #0 #0 ~IDENTIFIED~ ~WEAPON1~ EQUIP
+	REPLACE_CRE_ITEM ~%tutu_var%staf01~ #0 #0 #0 ~IDENTIFIED~ ~WEAPON2~
+BUT_ONLY_IF_IT_CHANGES
+
+COPY ~sirinescall/creatures/J#SIRIN1.CRE~ ~override/J#SIRIN1.CRE~  
+	WRITE_EVALUATED_ASCII 0x248 ~%J#sirin1%~ #8
+	WRITE_EVALUATED_ASCII 0x250 ~%tutu_var%SHOUT~ #8
+WRITE_EVALUATED_ASCII 0x258 ~%tutu_scripts%IRSPELL~ #8
+WRITE_EVALUATED_ASCII 0x268 ~%tutu_var%WTARSGT~ #8
+	REPLACE_CRE_ITEM ~%tutu_var%bow05~ #0 #0 #0 ~NONE~ ~WEAPON1~ EQUIP TWOHANDED
+	REPLACE_CRE_ITEM ~%tutu_var%sirine1~ #0 #0 #0 ~NONE~ ~WEAPON2~
+	REPLACE_CRE_ITEM ~%tutu_var%arow05~ #5 #0 #0 ~NONE~ ~QUIVER1~
+	REPLACE_CRE_ITEM ~%tutu_var%misc36~ #0 #0 #0 ~NONE~ ~QITEM1~
+BUT_ONLY_IF_IT_CHANGES
+
+COPY ~sirinescall/creatures/J#SIRIN2.CRE~ ~override/J#SIRIN2.CRE~  
+	WRITE_EVALUATED_ASCII 0x248 ~%J#sirin1%~ #8
+	WRITE_EVALUATED_ASCII 0x250 ~%tutu_var%SHOUT~ #8
+WRITE_EVALUATED_ASCII 0x258 ~%tutu_scripts%IRSPELL~ #8
+WRITE_EVALUATED_ASCII 0x268 ~%tutu_var%WTARSGT~ #8
+	REPLACE_CRE_ITEM ~%tutu_var%bow05~ #0 #0 #0 ~NONE~ ~WEAPON1~ EQUIP TWOHANDED
+	REPLACE_CRE_ITEM ~%tutu_var%sirine1~ #0 #0 #0 ~NONE~ ~WEAPON2~
+	REPLACE_CRE_ITEM ~%tutu_var%arow05~ #5 #0 #0 ~NONE~ ~QUIVER1~
+	REPLACE_CRE_ITEM ~%tutu_var%misc36~ #0 #0 #0 ~NONE~ ~QITEM1~
+BUT_ONLY_IF_IT_CHANGES
+
+
+//LAF HANDLE_TILESETS END
+
+LAF HANDLE_TILECONV
+				STR_VAR
+					input_path = ~sirinescall/tbc~
+END
+
+
+
+
+
+BEGIN ~Extended Lighthouse area~
+REQUIRE_PREDICATE GAME_IS ~bg1 totsc bgt bgee eet~ ~Your game is not compatible.~
+//REQUIRE_PREDICATE FILE_EXISTS_IN_GAME ~j#hall.are~ ~Lure of the Sirine's Call main component needs to be installed.~
+  REQUIRE_COMPONENT ~SiriensCall/setup-sirinescall.tp2~ 0 ~You'll have to install Lure of the Sirine's Call before~
+
+//List of creatures, which are looking bad on Night areas
+ACTION_IF !GAME_IS ~tutu tutu_totsc~ BEGIN
+	ACTION_DEFINE_ASSOCIATIVE_ARRAY turn_off_at_night BEGIN
+			bird => 1
+			eagle => 1
+			vultur => 1
+			seagul => 1
+	END
+END ELSE BEGIN
+	ACTION_DEFINE_ASSOCIATIVE_ARRAY turn_off_at_night BEGIN
+			_bird => 1
+			_eagle => 1
+			_vultur => 1
+			_seagul => 1
+	END
+END
+
+COPY_EXISTING ~%Lighthouse%.are~ ~override~
+PATCH_IF SOURCE_SIZE > 0x11b BEGIN		//Invalid file size check
+	GET_OFFSET_ARRAY region_array ARE_V10_REGIONS
+	//Get a new name for the InfoHouse trigger, because it double exists in the are file
+	PHP_EACH region_array AS region_num => region_offset BEGIN
+		READ_ASCII region_offset region_name (32) NULL
+		READ_ASCII region_offset+0x38	region_destination
+		PATCH_IF ((~%region_name%~ STRING_EQUAL ~InfoHouse~) AND (~%region_destination%~ STRING_EQUAL ~J#Hall~)) BEGIN
+			WRITE_ASCII region_offset ~J#Hall~ #9
+		END
+	END
+	//Adding two doors to the area
+	LPF fj_are_structure
+		INT_VAR
+			fj_open_box_left       = 1052
+			fj_open_box_top        = 2656
+			fj_open_box_right      = 1089
+			fj_open_box_bottom     = 2745
+			fj_closed_box_left     = 1090
+			fj_closed_box_top      = 2658
+			fj_closed_box_right    = 1124
+			fj_closed_box_bottom   = 2750
+			fj_cursor_idx          = 30
+			fj_trap_loc_x          = 1078
+			fj_trap_loc_y          = 2751
+			fj_open_loc_x          = 1086
+			fj_open_loc_y          = 2753
+			fj_closed_loc_x        = 1086
+			fj_closed_loc_y        = 2753
+			fj_door_open_vert_0    = 1089 + (2656 << 16)
+			fj_door_open_vert_1    = 1052 + (2684 << 16)
+			fj_door_open_vert_2    = 1053 + (2745 << 16)
+			fj_door_open_vert_3    = 1089 + (2720 << 16)
+			fj_door_closed_vert_0  = 1124 + (2750 << 16)
+			fj_door_closed_vert_1  = 1124 + (2687 << 16)
+			fj_door_closed_vert_2  = 1090 + (2658 << 16)
+			fj_door_closed_vert_3  = 1090 + (2721 << 16)
+			fj_cell_open_vert_0    = 66 + (223 << 16)
+			fj_cell_open_vert_1    = 66 + (224 << 16)
+			fj_cell_open_vert_2    = 66 + (225 << 16)
+			fj_cell_open_vert_3    = 66 + (226 << 16)
+			fj_cell_open_vert_4    = 66 + (227 << 16)
+			fj_cell_open_vert_5    = 66 + (228 << 16)
+			fj_cell_open_vert_6    = 67 + (221 << 16)
+			fj_cell_open_vert_7    = 67 + (222 << 16)
+			fj_cell_open_vert_8    = 67 + (223 << 16)
+			fj_cell_open_vert_9    = 67 + (224 << 16)
+			fj_cell_open_vert_10   = 67 + (225 << 16)
+			fj_cell_open_vert_11   = 67 + (226 << 16)
+			fj_cell_open_vert_12   = 67 + (227 << 16)
+			fj_cell_open_vert_13   = 68 + (221 << 16)
+			fj_cell_open_vert_14   = 68 + (222 << 16)
+			fj_cell_open_vert_15   = 68 + (223 << 16)
+			fj_cell_open_vert_16   = 68 + (224 << 16)
+			fj_cell_open_vert_17   = 68 + (225 << 16)
+			fj_cell_open_vert_18   = 68 + (226 << 16)
+			fj_cell_closed_vert_0  = 68 + (221 << 16)
+			fj_cell_closed_vert_1  = 68 + (222 << 16)
+			fj_cell_closed_vert_2  = 68 + (223 << 16)
+			fj_cell_closed_vert_3  = 68 + (224 << 16)
+			fj_cell_closed_vert_4  = 68 + (225 << 16)
+			fj_cell_closed_vert_5  = 69 + (222 << 16)
+			fj_cell_closed_vert_6  = 69 + (223 << 16)
+			fj_cell_closed_vert_7  = 69 + (224 << 16)
+			fj_cell_closed_vert_8  = 69 + (225 << 16)
+			fj_cell_closed_vert_9  = 69 + (226 << 16)
+			fj_cell_closed_vert_10 = 70 + (222 << 16)
+			fj_cell_closed_vert_11 = 70 + (223 << 16)
+			fj_cell_closed_vert_12 = 70 + (224 << 16)
+			fj_cell_closed_vert_13 = 70 + (225 << 16)
+			fj_cell_closed_vert_14 = 70 + (226 << 16)
+		STR_VAR
+			fj_structure_type      = door
+			fj_name                = ~J#HALLD~
+			fj_door_wed_id         = ~J#HALLD~
+			fj_travel_trigger      = ~J#HALL~
+	END
+	LPF fj_are_structure
+		INT_VAR
+			fj_open_box_left       = 899
+			fj_open_box_top        = 2670
+			fj_open_box_right      = 936
+			fj_open_box_bottom     = 2725
+			fj_closed_box_left     = 865
+			fj_closed_box_top      = 2668
+			fj_closed_box_right    = 905
+			fj_closed_box_bottom   = 2731
+			fj_cursor_idx          = 30
+			fj_trap_loc_x          = 896
+			fj_trap_loc_y          = 2742
+			fj_open_loc_x          = 897
+			fj_open_loc_y          = 2737
+			fj_closed_loc_x        = 897
+			fj_closed_loc_y        = 2737
+			fj_door_open_vert_0    = 901 + (2717 << 16)
+			fj_door_open_vert_1    = 936 + (2725 << 16)
+			fj_door_open_vert_2    = 936 + (2683 << 16)
+			fj_door_open_vert_3    = 928 + (2675 << 16)
+			fj_door_open_vert_4    = 919 + (2671 << 16)
+			fj_door_open_vert_5    = 909 + (2670 << 16)
+			fj_door_open_vert_6    = 899 + (2674 << 16)
+			fj_door_closed_vert_0  = 905 + (2715 << 16)
+			fj_door_closed_vert_1  = 870 + (2731 << 16)
+			fj_door_closed_vert_2  = 865 + (2684 << 16)
+			fj_door_closed_vert_3  = 872 + (2675 << 16)
+			fj_door_closed_vert_4  = 882 + (2668 << 16)
+			fj_door_closed_vert_5  = 890 + (2668 << 16)
+			fj_door_closed_vert_6  = 897 + (2670 << 16)
+			fj_cell_open_vert_0    = 56 + (222 << 16)
+			fj_cell_open_vert_1    = 56 + (223 << 16)
+			fj_cell_open_vert_2    = 56 + (224 << 16)
+			fj_cell_open_vert_3    = 56 + (225 << 16)
+			fj_cell_open_vert_4    = 57 + (222 << 16)
+			fj_cell_open_vert_5    = 57 + (223 << 16)
+			fj_cell_open_vert_6    = 57 + (224 << 16)
+			fj_cell_open_vert_7    = 57 + (225 << 16)
+			fj_cell_open_vert_8    = 58 + (222 << 16)
+			fj_cell_open_vert_9    = 58 + (223 << 16)
+			fj_cell_open_vert_10   = 58 + (224 << 16)
+			fj_cell_open_vert_11   = 58 + (225 << 16)
+			fj_cell_closed_vert_0  = 54 + (221 << 16)
+			fj_cell_closed_vert_1  = 54 + (222 << 16)
+			fj_cell_closed_vert_2  = 54 + (223 << 16)
+			fj_cell_closed_vert_3  = 54 + (224 << 16)
+			fj_cell_closed_vert_4  = 54 + (225 << 16)
+			fj_cell_closed_vert_5  = 55 + (221 << 16)
+			fj_cell_closed_vert_6  = 55 + (222 << 16)
+			fj_cell_closed_vert_7  = 55 + (223 << 16)
+			fj_cell_closed_vert_8  = 55 + (224 << 16)
+			fj_cell_closed_vert_9  = 55 + (225 << 16)
+			fj_cell_closed_vert_10 = 56 + (221 << 16)
+			fj_cell_closed_vert_11 = 56 + (222 << 16)
+			fj_cell_closed_vert_12 = 56 + (223 << 16)
+			fj_cell_closed_vert_13 = 56 + (224 << 16)
+			fj_cell_closed_vert_14 = 56 + (225 << 16)
+		STR_VAR
+			fj_structure_type      = door
+			fj_name                = ~J#LIGHD~
+			fj_door_wed_id         = ~J#LIGHD~
+			fj_travel_trigger      = ~InfoLite~
+	END
+	
+	//This patch is for all games, except BG1, which doesn't had extended Nightarea support
+	PATCH_IF !GAME_IS ~bg1 totsc~ BEGIN
+		WRITE_BYTE 0x48 (THIS BOR 0b01000000)	//set the extended night flag
+		GET_OFFSET_ARRAY actors ARE_V10_ACTORS
+		//Patch "creatures which doesn't look good in the dark" out, at night 
+		PHP_EACH actors AS i => off BEGIN
+			READ_ASCII off + 0x80 cre_resref
+			TO_LOWER cre_resref
+			PATCH_IF VARIABLE_IS_SET $turn_off_at_night("%cre_resref%") BEGIN
+				WRITE_LONG off + 0x40 0x1ffe0
+			END
+		END
+	END
+END
+BUT_ONLY
+
+
+
+
+
+/* bgee, also no name change but use of pvrz-files */
+ACTION_IF GAME_IS ~bgee~ BEGIN
+
+	COPY_EXISTING ~AR3600LM.bmp~ ~override~
+	COPY_EXISTING ~AR3600HT.bmp~ ~override~
+	COPY ~sirinescall/base/bmp/AR3600SR.bmp~ ~override~
+	COPY ~sirinescall/base/bmp/AR3600LN.bmp~ ~override~
+
+	COPY ~sirinescall/base/Lighthouse_ee~ ~override~
+
+/*
+	COPY_EXISTING ~AR3600LM.bmp~ ~sirinescall/bif/WA%Lighthouse%~
+	COPY_EXISTING ~AR3600HT.bmp~ ~sirinescall/bif/WA%Lighthouse%~
+
+	COPY ~sirinescall/base/bmp~ ~sirinescall/bif/WA%Lighthouse%~
+	COPY ~sirinescall/base/pvrz~ ~sirinescall/bif/WA%Lighthouse%~
+	COPY ~sirinescall/base/wed_ee~ ~sirinescall/bif/WA%Lighthouse%~
+
+	LAF HANDLE_TILECONV
+				STR_VAR
+					input_path = EVAL ~sirinescall/base/mbc/%ee-folder%~
+					output_path	  = EVAL ~sirinescall/bif/WA%Lighthouse%~
+	END
+
+	LAF HANDLE_TILECONV
+				STR_VAR
+					input_path = EVAL ~sirinescall/base/mbc/%ee-folder%/n~
+					output_path	  = EVAL ~sirinescall/bif/WA%Lighthouse%~
+	END
+
+	LAF HANDLE_TILECONV
+				STR_VAR
+					input_path = EVAL ~sirinescall/base/tis~
+					output_path	  = EVAL ~sirinescall/bif/WA%Lighthouse%~
+	END
+*/
+
+END
+
+/* eet: pvrz-files, but name change necessary (also inside the wed-file) */
+ACTION_IF GAME_IS ~eet~ BEGIN
+
+	COPY_EXISTING ~BG3600LM.bmp~ ~override~
+	COPY_EXISTING ~BG3600HT.bmp~ ~override~
+	COPY ~sirinescall/base/bmp/AR3600SR.bmp~ ~override/BG3600SR.bmp~
+	COPY ~sirinescall/base/bmp/AR3600LN.bmp~ ~override/BG3600LN.bmp~
+
+ACTION_BASH_FOR ~sirinescall/base/Lighthouse_ee~ ~A3600.*\.PVRZ~ BEGIN
+  OUTER_PATCH_SAVE dest_file "%BASH_FOR_FILE%" BEGIN
+    REPLACE_TEXTUALLY ~A\(3600.*\.PVRZ\)~ ~B\1~
+  END
+  COPY ~%BASH_FOR_FILESPEC%~ ~override/%dest_file%~
+END
+
+ COPY ~sirinescall/base/Lighthouse_ee/AR3600.MOS~ ~override/BG3600.MOS~
+ COPY ~sirinescall/base/Lighthouse_ee/AR3600.TIS~ ~override/BG3600.TIS~
+ COPY ~sirinescall/base/Lighthouse_ee/AR3600.WED~ ~override/BG3600.WED~
+
+ COPY ~sirinescall/base/Lighthouse_ee/AR3600N.MOS~ ~override/BG3600N.MOS~
+ COPY ~sirinescall/base/Lighthouse_ee/AR3600N.TIS~ ~override/BG3600N.TIS~
+ COPY ~sirinescall/base/Lighthouse_ee/AR3600N.WED~ ~override/BG3600N.WED~
+
+ COPY_EXISTING ~%Lighthouse%.wed~ ~override~
+	WRITE_EVALUATED_ASCII 0x24 ~%Lighthouse%~ #6
+ COPY_EXISTING ~%Lighthouse%N.wed~ ~override~
+	WRITE_EVALUATED_ASCII 0x24 ~%Lighthouse%N~ #6
+
+/*
+	MKDIR ~sirinescall/bif/tmp~
+
+
+	COPY_EXISTING ~BG3600LM.bmp~ ~sirinescall/bif/WA%Lighthouse%~
+	COPY_EXISTING ~BG3600HT.bmp~ ~sirinescall/bif/WA%Lighthouse%~
+	COPY ~sirinescall/base/bmp/AR3600SR.bmp~ ~sirinescall/bif/WA%Lighthouse%/BG3600SR.bmp~
+	COPY ~sirinescall/base/bmp/AR3600LN.bmp~ ~sirinescall/bif/WA%Lighthouse%/BG3600LN.bmp~
+
+	ACTION_BASH_FOR ~sirinescall/base/pvrz~ ~A3600.*\.PVRZ~ BEGIN
+	  OUTER_PATCH_SAVE dest_file "%BASH_FOR_FILE%" BEGIN
+	    REPLACE_TEXTUALLY ~A\(3600.*\.PVRZ\)~ ~B\1~
+	  END
+	  COPY ~%BASH_FOR_FILESPEC%~ ~sirinescall/bif/WA%Lighthouse%/%dest_file%~
+ 	END
+
+	LAF HANDLE_TILECONV
+				STR_VAR
+					input_path = EVAL ~sirinescall/base/mbc/%ee-folder%~
+					output_path	  = EVAL ~sirinescall/bif/tmp~
+	END
+
+	LAF HANDLE_TILECONV
+				STR_VAR
+					input_path = EVAL ~sirinescall/base/mbc/%ee-folder%/n~
+					output_path	  = EVAL ~sirinescall/bif/tmp~
+	END
+
+
+	MOVE + ~sirinescall/bif/tmp/AR3600.MOS~ ~sirinescall/bif/WA%Lighthouse%/BG3600.MOS~
+	MOVE + ~sirinescall/bif/tmp/AR3600N.MOS~ ~sirinescall/bif/WA%Lighthouse%/BG3600N.MOS~
+
+	COPY ~sirinescall/base/pvrz/AR3600.TIS~ ~sirinescall/bif/WA%Lighthouse%/BG3600.TIS~
+	COPY ~sirinescall/base/pvrz/AR3600N.TIS~ ~sirinescall/bif/WA%Lighthouse%/BG3600N.TIS~
+
+	COPY ~sirinescall/base/wed_ee/AR3600.WED~ ~sirinescall/bif/WA%Lighthouse%/BG3600.WED~
+		WRITE_EVALUATED_ASCII 0x24 ~%Lighthouse%~ #6
+	COPY ~sirinescall/base/wed_ee/AR3600N.WED~ ~sirinescall/bif/WA%Lighthouse%/BG3600N.WED~
+		WRITE_EVALUATED_ASCII 0x24 ~%Lighthouse%N~ #6
+
+
+	LAF HANDLE_TILECONV
+				STR_VAR
+					input_path = EVAL ~sirinescall/base/tis~
+					output_path	  = EVAL ~sirinescall/bif/WA%Lighthouse%~
+	END
+	LAF REMOVE_DIRECTORY STR_VAR dir_name = EVAL ~sirinescall/bif/tmp~ END
+*/
+END
+
+ACTION_IF GAME_IS ~bg1 totsc bgt tutu tutu_totsc~ BEGIN
+
+MKDIR ~sirinescall/bif~
+
+MKDIR ~sirinescall/bif/WA%Lighthouse%~
+
+//Install the day area for bg1, totsc which doesn't need filename changes
+ACTION_IF GAME_IS ~bg1 totsc~ BEGIN
+	COPY_EXISTING ~%Lighthouse%LM.bmp~ ~sirinescall/bif/WA%Lighthouse%~
+	COPY_EXISTING ~%Lighthouse%HT.bmp~ ~sirinescall/bif/WA%Lighthouse%~
+	COPY ~sirinescall/base/wed/%Lighthouse%.wed~ ~sirinescall/bif/WA%Lighthouse%~
+	COPY ~sirinescall/base/bmp/%Lighthouse%SR.bmp~ ~sirinescall/bif/WA%Lighthouse%~
+	
+	LAF HANDLE_TILECONV
+				STR_VAR
+					input_path = EVAL ~sirinescall/base/mbc/%ee-folder%~
+					output_path	  = EVAL ~sirinescall/bif/WA%Lighthouse%~
+	END
+	
+	LAF HANDLE_TILECONV
+				STR_VAR
+					input_path = EVAL ~sirinescall/base/tbcD~
+					output_path	  = EVAL ~sirinescall/bif/WA%Lighthouse%~
+	END
+
+END
+
+
+//Install Day and Night areas for BGT, Tutu, Tutu_totsc: the tis and wed files are converted during the installation through tis2bg2 to safe space... ;)
+ACTION_IF GAME_IS ~bgt tutu tutu_totsc~ BEGIN
+
+
+
+	COPY_EXISTING ~%Lighthouse%LM.bmp~ ~sirinescall/bif/WA%Lighthouse%~
+	COPY_EXISTING ~%Lighthouse%HT.bmp~ ~sirinescall/bif/WA%Lighthouse%~
+	COPY ~sirinescall/base/bmp/AR3600SR.bmp~ ~sirinescall/bif/WA%Lighthouse%/%Lighthouse%SR.bmp~
+	COPY ~sirinescall/base/bmp/AR3600LN.bmp~ ~sirinescall/bif/WA%Lighthouse%/%Lighthouse%LN.bmp~
+	
+	MKDIR ~sirinescall/bif/tmp~
+	
+//	COPY ~sirinescall/base/wed~ ~sirinescall/bif/tmp~
+
+	COPY ~sirinescall/base/wed/AR3600.WED~ ~sirinescall/bif/tmp~
+		WRITE_EVALUATED_ASCII 0x24 ~%Lighthouse_tis%~ #6
+	COPY ~sirinescall/base/wed/AR3600N.WED~ ~sirinescall/bif/tmp~
+		WRITE_EVALUATED_ASCII 0x24 ~%Lighthouse_tis%N~ #6
+
+	
+	LAF HANDLE_TILECONV
+				STR_VAR
+					input_path = EVAL ~sirinescall/base/tbcD~
+					output_path	  = EVAL ~sirinescall/bif/tmp~
+	END
+	
+	LAF HANDLE_TILECONV
+				STR_VAR
+					input_path = EVAL ~sirinescall/base/tbcN~
+					output_path	  = EVAL ~sirinescall/bif/tmp~
+	END
+
+   ACTION_IF GAME_IS ~tutu tutu_totsc~ THEN BEGIN
+	MOVE + ~sirinescall/bif/tmp/AR3600.tis~ ~sirinescall/bif/WA%Lighthouse%/%Lighthouse_tis%.tis~
+	MOVE + ~sirinescall/bif/tmp/AR3600N.tis~ ~sirinescall/bif/WA%Lighthouse%/%Lighthouse_tis%N.tis~
+	MOVE + ~sirinescall/bif/tmp/AR3600.WED~ ~sirinescall/bif/WA%Lighthouse%/%Lighthouse%.WED~
+	MOVE + ~sirinescall/bif/tmp/AR3600N.WED~ ~sirinescall/bif/WA%Lighthouse%/%Lighthouse%N.WED~
+   END
+
+   ACTION_IF GAME_IS ~bgt~ THEN BEGIN
+	COPY + ~%tis2bg2%~ ~sirinescall/bif/tmp~
+	OUTER_SPRINT tis2bg2 ~sirinescall%os_slash%bif%os_slash%tmp%os_slash%tis2bg2%exe%~
+	
+	AT_NOW ~%tis2bg2% -d -h -s "AR3600" "..%os_slash%WA%Lighthouse%%os_slash%%Lighthouse_tis%"~
+	
+	AT_NOW ~%tis2bg2% -d -h -s "AR3600N" "..%os_slash%WA%Lighthouse%%os_slash%%Lighthouse_tis%N"~
+	
+	DELETE + ~%tis2bg2%~
+   END
+
+	
+	MOVE + ~sirinescall/bif/tmp/yswave.tis~ ~sirinescall/bif/WA%Lighthouse%~
+	MOVE + ~sirinescall/bif/tmp/yswaver.tis~ ~sirinescall/bif/WA%Lighthouse%~
+	
+	LAF HANDLE_TILECONV
+				STR_VAR
+					input_path = EVAL ~sirinescall/base/mbc/%ee-folder%/n~
+					output_path	  = EVAL ~sirinescall/bif/tmp~
+	END
+	LAF HANDLE_TILECONV
+				STR_VAR
+					input_path = EVAL ~sirinescall/base/mbc/%ee-folder%~
+					output_path	  = EVAL ~sirinescall/bif/tmp~
+	END
+	
+	MOVE + ~sirinescall/bif/tmp/AR3600.mos~ ~sirinescall/bif/WA%Lighthouse%/%Lighthouse%.mos~
+	MOVE + ~sirinescall/bif/tmp/AR3600N.mos~ ~sirinescall/bif/WA%Lighthouse%/%Lighthouse%N.mos~
+	
+	
+	
+	ACTION_FOR_EACH var IN bmp mos tis wed exe BEGIN
+		ACTION_BASH_FOR ~sirinescall/bif/tmp~ ~^.+\.%var%$~ BEGIN
+			DELETE +  ~%BASH_FOR_FILESPEC%~
+		END
+	END
+
+	LAF REMOVE_DIRECTORY STR_VAR dir_name = EVAL ~sirinescall/bif/tmp~ END
+END
+
+//Biff the tis/wed/bmp/mos files
+MAKE_BIFF ~WA%Lighthouse%~ BEGIN ~sirinescall/bif/WA%Lighthouse%~ ~^.*$~ END
+
+ACTION_FOR_EACH var IN bmp mos tis wed BEGIN
+	ACTION_BASH_FOR ~sirinescall/bif/WA%Lighthouse%~ ~^.+\.%var%$~ BEGIN
+		DELETE +  ~%BASH_FOR_FILESPEC%~
+	END
+END
+
+LAF REMOVE_DIRECTORY STR_VAR dir_name = EVAL ~sirinescall/bif/WA%Lighthouse%~ END
+
+LAF REMOVE_DIRECTORY STR_VAR dir_name = ~sirinescall/bif~ END
+
+END

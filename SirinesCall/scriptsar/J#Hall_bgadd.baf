@@ -1,0 +1,11 @@
+// Lighthouse area script
+
+IF
+	Global("J#TalkedPirate","GLOBAL",1)
+	!Exists("J#pirat1")
+	!Dead("J#pirat1")
+THEN
+	RESPONSE #100
+		CreateCreature("J#Pirat1",[311.229]%FACE_8%)
+	ActionOverride("J#Pirat1",SetNumTimesTalkedTo(1))
+END

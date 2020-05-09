@@ -1,0 +1,65 @@
+// Need to turn neutral if Sil sets global to 1
+
+IF
+		AttackedBy([GOODCUTOFF],DEFAULT)
+	Allegiance(Myself,NEUTRAL)
+THEN
+	RESPONSE #100
+		Shout(1)
+		SetGlobal("J#SirinesNeutral","LOCALS",1)
+		Enemy()
+END
+
+IF
+		Heard("sirine",1)
+	Allegiance(Myself,NEUTRAL)
+THEN
+	RESPONSE #100
+		Shout(1)
+		SetGlobal("J#SirinesNeutral","LOCALS",1)
+		Enemy()
+END
+
+
+IF
+		Allegiance("Sil",ENEMY)
+	!Allegiance(Myself,ENEMY)
+THEN
+	RESPONSE #100
+		SetGlobal("J#SirinesNeutral","LOCALS",1)
+		Enemy()
+END
+
+IF
+		Heard("Sil",1)
+	!Allegiance(Myself,ENEMY)
+THEN
+	RESPONSE #100
+		SetGlobal("J#SirinesNeutral","LOCALS",1)
+		Enemy()
+END
+
+IF
+		Global("J#SilMurder","GLOBAL",2)
+	!Allegiance(Myself,ENEMY)
+THEN
+	RESPONSE #100
+		SetGlobal("J#SirinesNeutral","LOCALS",1)
+		Enemy()
+END
+
+IF	Global("J#TalkedSil","GLOBAL",1)
+	Global("J#SilEnemy","GLOBAL",0)
+	!Allegiance("sil",ENEMY)
+	!Global("J#SilMurder","GLOBAL",2)
+	!Dead("sil")
+	!Allegiance(Myself,NEUTRAL)
+	!Allegiance(Myself,GOODCUTOFF)
+	Global("J#SirinesNeutral","LOCALS",0)
+
+THEN
+	RESPONSE #100
+		SetGlobal("J#SirinesNeutral","LOCALS",1)
+		ChangeEnemyAlly(Myself,NEUTRAL)
+END
+

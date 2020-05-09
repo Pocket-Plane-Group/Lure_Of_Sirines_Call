@@ -1,0 +1,33 @@
+IF
+	AttackedBy([GOODCUTOFF],DEFAULT)
+	Allegiance(Myself,NEUTRAL)
+THEN
+	RESPONSE #100
+		SetGlobal("J#PirateFight","GLOBAL",1)
+		Enemy()
+		Attack(NearestEnemyOf(Myself))
+END
+
+IF
+		Global("J#PirateFight","GLOBAL",1)
+	Allegiance(Myself,NEUTRAL)
+THEN
+	RESPONSE #100
+		Enemy()
+END
+
+IF
+		Global("J#PirateFight","GLOBAL",2)
+	Allegiance(Myself,NEUTRAL)
+THEN
+	RESPONSE #100
+		Enemy()
+END
+
+IF
+		Global("J#SilMurder","GLOBAL",4)
+	Allegiance(Myself,NEUTRAL)
+THEN
+	RESPONSE #100
+		Enemy()
+END
