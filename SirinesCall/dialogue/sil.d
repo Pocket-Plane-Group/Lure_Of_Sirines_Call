@@ -1,5 +1,8 @@
 
-REPLACE_STATE_TRIGGER %tutu_var%sil 0 ~!Global("J#TalkedPirate","GLOBAL",1) !Global("J#TalkedSil","GLOBAL",1) !Allegiance(Myself,[ENEMY])~
+/*
+REPLACE_STATE_TRIGGER %tutu_var%sil 7 ~!Global("J#TalkedPirate","GLOBAL",1) !Global("J#TalkedSil","GLOBAL",1) !Allegiance(Myself,[ENEMY])~
+*/
+REPLACE_STATE_TRIGGER %tutu_var%sil 7 ~!Allegiance(Myself,[ENEMY])~
 
 REPLACE_STATE_TRIGGER %tutu_var%sil 11 ~Allegiance(Myself,[ENEMY])~
 

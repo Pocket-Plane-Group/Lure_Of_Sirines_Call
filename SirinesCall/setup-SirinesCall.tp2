@@ -1,23 +1,9 @@
-/* 
-Changes:
--Ardrou will now give the correct dialogue if her son was saved without talking to her first
--removed wrong string entries from J#Bren.CRE
--fixed install bug for OSX: changed SirinesCall/tools/tileconv/macosx to SirinesCall/tools/tileconv/osx
--fixed install bug for Linux by renaming the directory SirinesCall\tools\tileconv\linux to (...)unix
--Mod won't install on Steam/GOG SoD if modmerge didn't run (Linux / OSX).
--removing of doubled setup-tras
--fixed crashing Lighthouse Area in BG:EE and EET for installed component "Extended Lighthouse Area"
--g3_bgee_cpmvars.tpa corrected (Post dialogue Dynaheir, Jaheira - not important for this mod)
--Update to WeiDU v243
-*/
-
-
 BACKUP ~sirinescall/backup~
 AUTHOR ~http://forums.pocketplane.net/index.php/topic,17901.0.html~ /* ~ghreyfain@pocketplane.net~ */
 
-VERSION ~v15~ //180131
+VERSION ~v16~ 
 
-README ~sirinescall/install/sirine_readme.html~
+README ~sirinescall/readme/sirine_readme.%LANGUAGE%.html~ ~sirinescall/readme/sirine_readme.english.html~
 
 ALWAYS
 
@@ -191,6 +177,7 @@ END
  
  
 	INCLUDE ~SirinesCall/lib/a7_tools.tpa~ 
+	INCLUDE ~SirinesCall/lib/alter_searchmap.tpa~ 
  
  
 	//Variables for the mos file folders
@@ -251,7 +238,35 @@ BEGIN @0
 
 
 // Dialogue
-COMPILE EVALUATE_BUFFER ~SirinesCall/Dialogue~
+INCLUDE ~SirinesCall/lib/func_fetch_journal_entries.tph~
+COPY_EXISTING ~%tutu_var%cordyr.dlg~ ~override~
+	LPF ~READ_JOURNAL_STRREF~
+		INT_VAR
+		state         = "1"  // state index
+		stateResponse = 0     // relative response index (e.g. 0 for first response associated with the state, 1 for second response, and so on...)
+		RET
+		strref    // returned string reference, or -1 if not available
+	END
+	SET unsolved_strref = strref
+	LPF ~READ_JOURNAL_STRREF~
+		INT_VAR
+		state         = "3"  // state index
+		stateResponse = 0     // relative response index (e.g. 0 for first response associated with the state, 1 for second response, and so on...)
+		RET
+		strref    // returned string reference, or -1 if not available
+	END
+	SET solved_strref = strref
+	
+COMPILE EVALUATE_BUFFER ~SirinesCall/Dialogue/ardrou.d~
+COMPILE EVALUATE_BUFFER ~SirinesCall/Dialogue/pirates.d~
+COMPILE EVALUATE_BUFFER ~SirinesCall/Dialogue/sil.d~
+ACTION_IF GAME_IS ~bg1 totsc~ THEN BEGIN
+  COMPILE EVALUATE_BUFFER ~SirinesCall/Dialogue/acordyr.d~
+END ELSE BEGIN
+  COMPILE EVALUATE_BUFFER ~SirinesCall/Dialogue/acordyr_add.d~
+		~SirinesCall/Dialogue/acordyr.d~ USING ~SirinesCall/translations/autotra/%LANGUAGE%/acordyr.tra~
+
+END
 // Scripts
 COMPILE EVALUATE_BUFFER ~SirinesCall/Scripts~
 
@@ -496,7 +511,12 @@ BUT_ONLY
 
   
 //ACTION_IF GAME_IS ~eet~ THEN BEGIN
-	COPY ~sirinescall/areas/ar3600sr.bmp~ ~override/%Lighthouse%SR.bmp~
+	//	COPY ~sirinescall/base/bmp/AR3600SR.bmp~ ~override/BG3600SR.bmp~
+	LAF ALTER_SEARCHMAP
+		STR_VAR
+		path_to_2da_file = ~sirinescall/base/bmp/AR3600SR_changes.2da~ // full path to the *changes.2da file containing your icons, e.g. ~mymod/bam/AR3700SR_changes_ee.2da~
+		areaname = EVAL ~%Lighthouse%~ 							  		 // area name, e.g. ~AR3700~
+	END	
 
 /* J#ligh.are */
 COPY_EXISTING ~J#ligh.are~ ~override~
@@ -1238,7 +1258,13 @@ ACTION_IF GAME_IS ~bgee~ BEGIN
 
 	COPY_EXISTING ~AR3600LM.bmp~ ~override~
 	COPY_EXISTING ~AR3600HT.bmp~ ~override~
-	COPY ~sirinescall/base/bmp/AR3600SR.bmp~ ~override~
+//	COPY ~sirinescall/base/bmp/AR3600SR.bmp~ ~override/BG3600SR.bmp~
+	LAF ALTER_SEARCHMAP
+		STR_VAR
+		path_to_2da_file = ~sirinescall/base/bmp/AR3600SR_changes.2da~ // full path to the *changes.2da file containing your icons, e.g. ~mymod/bam/AR3700SR_changes_ee.2da~
+		areaname = EVAL ~%Lighthouse%~ 							  		 // area name, e.g. ~AR3700~
+	END	
+	
 	COPY ~sirinescall/base/bmp/AR3600LN.bmp~ ~override~
 
 	COPY ~sirinescall/base/Lighthouse_ee~ ~override~
@@ -1277,7 +1303,13 @@ ACTION_IF GAME_IS ~eet~ BEGIN
 
 	COPY_EXISTING ~BG3600LM.bmp~ ~override~
 	COPY_EXISTING ~BG3600HT.bmp~ ~override~
-	COPY ~sirinescall/base/bmp/AR3600SR.bmp~ ~override/BG3600SR.bmp~
+//	COPY ~sirinescall/base/bmp/AR3600SR.bmp~ ~override/BG3600SR.bmp~
+	LAF ALTER_SEARCHMAP
+		STR_VAR
+		path_to_2da_file = ~sirinescall/base/bmp/AR3600SR_changes.2da~ // full path to the *changes.2da file containing your icons, e.g. ~mymod/bam/AR3700SR_changes_ee.2da~
+		areaname = EVAL ~%Lighthouse%~ 							  		 // area name, e.g. ~AR3700~
+	END	
+	
 	COPY ~sirinescall/base/bmp/AR3600LN.bmp~ ~override/BG3600LN.bmp~
 
 ACTION_BASH_FOR ~sirinescall/base/Lighthouse_ee~ ~A3600.*\.PVRZ~ BEGIN
@@ -1385,7 +1417,13 @@ ACTION_IF GAME_IS ~bgt tutu tutu_totsc~ BEGIN
 
 	COPY_EXISTING ~%Lighthouse%LM.bmp~ ~sirinescall/bif/WA%Lighthouse%~
 	COPY_EXISTING ~%Lighthouse%HT.bmp~ ~sirinescall/bif/WA%Lighthouse%~
-	COPY ~sirinescall/base/bmp/AR3600SR.bmp~ ~sirinescall/bif/WA%Lighthouse%/%Lighthouse%SR.bmp~
+	//	COPY ~sirinescall/base/bmp/AR3600SR.bmp~ ~override/BG3600SR.bmp~
+	LAF ALTER_SEARCHMAP
+		STR_VAR
+		path_to_2da_file = ~sirinescall/base/bmp/AR3600SR_changes.2da~ // full path to the *changes.2da file containing your icons, e.g. ~mymod/bam/AR3700SR_changes_ee.2da~
+		areaname = EVAL ~%Lighthouse%~ 							  		 // area name, e.g. ~AR3700~
+	END	
+	COPY_EXISTING ~%Lighthouse%SR.bmp~ ~sirinescall/bif/WA%Lighthouse%/%Lighthouse%SR.bmp~
 	COPY ~sirinescall/base/bmp/AR3600LN.bmp~ ~sirinescall/bif/WA%Lighthouse%/%Lighthouse%LN.bmp~
 	
 	MKDIR ~sirinescall/bif/tmp~
