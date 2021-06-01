@@ -237,9 +237,9 @@ LANGUAGE ~D¢¤¤ˆŠ‚ (Russian) - Badgert, iopden & aerie.ru~
 
 BEGIN @0
 LABEL "SirinesCall-Main"
-REQUIRE_PREDICATE GAME_IS ~totsc tutu tutu_totsc bgt bgee eet~ ~This mod is not compatible with your game~
-FORBID_COMPONENT ~EET_end.tp2~ ~0~ ~The mod needs to be installed after EET_End.~
-FORBID_COMPONENT ~EET_end.tp2~ ~1~ ~The mod needs to be installed after EET_End.~
+REQUIRE_PREDICATE GAME_IS ~totsc tutu tutu_totsc bgt bgee eet~ @1005 /* ~This mod is not compatible with your game.~ */
+FORBID_COMPONENT ~EET_end.tp2~ ~0~ @1004 /* ~The mod needs to be installed after EET_End.~ */
+FORBID_COMPONENT ~EET_end.tp2~ ~1~ @1004 /* ~The mod needs to be installed after EET_End.~ */
 
 
 // Dialogue

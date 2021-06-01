@@ -7,4 +7,10 @@
 @1001  = ~BGT rilevato.~
 @1002  = ~Questo mod deve essere installato nella tua directory di BG2, Tutu, EasyTutu, o BGT, dopo l'installazione di Tutu/BGT.~
 
+/* new for v16.1 */
+@1003  = ~Extended Lighthouse Area~
+@1004  = ~The mod needs to be installed after EET_End.~
+@1005  = ~This mod is not compatible with your game.~
+
+
 
