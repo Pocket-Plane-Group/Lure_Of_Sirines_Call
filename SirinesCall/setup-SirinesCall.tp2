@@ -1,7 +1,8 @@
 BACKUP ~sirinescall/backup~
-AUTHOR ~http://forums.pocketplane.net/index.php/topic,17901.0.html~ /* ~ghreyfain@pocketplane.net~ */
+SUPPORT ~http://forums.pocketplane.net/index.php/topic,17901.0.html~ 
+//AUTHOR ~http://forums.pocketplane.net/index.php/topic,17901.0.html~ /* ~ghreyfain@pocketplane.net~ */
 
-VERSION ~v16~ 
+VERSION ~v16.1~ 
 
 README ~sirinescall/readme/sirine_readme.%LANGUAGE%.html~ ~sirinescall/readme/sirine_readme.english.html~
 
@@ -77,7 +78,7 @@ END
 	ACTION_IF GAME_IS ~eet~ THEN BEGIN
 		/* Tell the player it is using eet */
 		PRINT ~EET detected...~
-		INCLUDE ~sirinescall/lib/eet_cpmvars.tpa~
+		INCLUDE ~EET/other/cpmvars/eet_cpmvars.tpa~
 		INCLUDE ~sirinescall/lib/rr_tutubgt_addvars.tpa~
 		OUTER_SPRINT ~Lighthouse_bcs~ ~BG3600~
 		OUTER_SPRINT ~J#sirin1~ ~J#sirin1~
@@ -235,6 +236,10 @@ LANGUAGE ~D¢¤¤ˆŠ‚ (Russian) - Badgert, iopden & aerie.ru~
          ~sirinescall/translations/russian/setup-sirinescall.tra~
 
 BEGIN @0
+LABEL "SirinesCall-Main"
+REQUIRE_PREDICATE GAME_IS ~totsc tutu tutu_totsc bgt bgee eet~ ~This mod is not compatible with your game~
+FORBID_COMPONENT ~EET_end.tp2~ ~0~ ~The mod needs to be installed after EET_End.~
+FORBID_COMPONENT ~EET_end.tp2~ ~1~ ~The mod needs to be installed after EET_End.~
 
 
 // Dialogue
@@ -1069,7 +1074,8 @@ END
 
 
 
-BEGIN ~Extended Lighthouse area~
+BEGIN @1003 /* ~Extended Lighthouse Area~ */
+LABEL "SirinesCall-ExtendedLighthouseArea"
 REQUIRE_PREDICATE GAME_IS ~bg1 totsc bgt bgee eet~ ~Your game is not compatible.~
 //REQUIRE_PREDICATE FILE_EXISTS_IN_GAME ~j#hall.are~ ~Lure of the Sirine's Call main component needs to be installed.~
   REQUIRE_COMPONENT ~SiriensCall/setup-sirinescall.tp2~ 0 ~You'll have to install Lure of the Sirine's Call before~
