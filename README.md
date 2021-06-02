@@ -13,7 +13,7 @@ The optional component "Extended Lighthouse Area" replaces the area with a versi
 
 Note: For downloading the current version from GitHub, make sure you go to the releases page and download the latest release of this mod!
 
-[Read the Readme](https://Pocket-Plane-Group.github.io/Pocket-Plane-Group.github.io/readmes/sirine_readme.english.html)
+[Read the Readme](https://Pocket-Plane-Group.github.io/readmes/sirine_readme.english.html)
 
 [Visit the Mod's Page at PPG](http://www.pocketplane.net/tutumods)
 
