@@ -12,3 +12,9 @@
 @1003  = ~Extended Lighthouse Area~
 @1004  = ~The mod needs to be installed after EET_End.~
 @1005  = ~This mod is not compatible with your game.~
+
+/* new for v16.2 */
+@1006 = ~Modmerge is required before mods can be installed on this game. Check the readme for more information and a link to download Modmerge.~
+@1007 = ~Baldur's Gate detected.~
+@1008 = ~BG:EE detected...~
+@1009 = ~EET detected...~
