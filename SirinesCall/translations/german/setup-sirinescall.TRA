@@ -9,7 +9,7 @@
 
 /* new for v16.1 */
 @1003  = ~Extended Lighthouse Area~
-@1004  = ~The mod needs to be installed after EET_End.~
+@1004  = ~The mod needs to be installed before EET_End.~
 @1005  = ~This mod is not compatible with your game.~
 
 /* new for v16.2 */
