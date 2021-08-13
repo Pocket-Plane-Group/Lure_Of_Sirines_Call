@@ -1,24 +1,27 @@
 /* BG2engine */
 
-@0    = ~Jesteœ jednym z tych, których widzia³y moje siostry razem z ludŸmi ze statków!  Ostrzega³am was ju¿ i nie zamierzamy d³u¿ej cierpieæ z powodu waszych morderstw i napaœci na nas.~
-@1    = ~Jestem tu z mojej w³asnej woli i nikt nie bêdzie mi mówi³ co mam robiæ.  Jeœli masz problem ze zrozumieniem tego, poczujesz mój gniew.~
-@2    = ~Czekaj!  Nie szukam konfliktu.  Co masz na myœli mówi¹c ‘morderstw i napaœci’?~
-@3    = ~O czym ty mówisz?  Nigdy wczeœniej z tob¹ nie rozmawia³em.~
-@4    = ~Ostrzegano mnie przed tob¹ i takimi jak ty.  OdejdŸ, a nie stanie ci siê krzywda!~
-@5    = ~Nigdy nie by³eœ i nigdy nie bêdziesz tu mile widziany.  To koniec moich ostrze¿eñ!~
-@6    = ~K³amiesz i udajesz, ¿e nie masz z tym nic wspólnego.  Moje siostry widzia³y ciê z tymi mordercami ze statku i z wie¿y.~
-@7    = ~Przychodz¹ tu szukaæ skarbów i bezwartoœciowych œwiecide³ek.  Mówi³am ju¿ im, a teraz powiem tobie; nie ma tu ¿adnego skarbu prócz wiatru, piasku i morza.  Wynoœ siê z naszego domu!~
-@8    = ~Jeœli chcesz, mogê przekazaæ twoje ostrze¿enie.  S¹ bli¿si mi, ni¿ tobie i mog¹ wzi¹æ do siebie moje s³owa, podczas gdy ignoruj¹ twoje.~
-@9    = ~Skarb?  Jeœli tak, to lepiej siê odsuñ, bo ju¿ traktujê go jako moj¹ kolejn¹ zdobycz.~
-@10   = ~To okropne.  Pomogê ci pozbywaj¹c siê tych drani z tego miejsca raz na zawsze!~
-@11   = ~Nie interesuj¹ mnie wasze g³upie sprzeczki.  Ja tylko badam te tereny.~
-@12   = ~Ob³uda, cwaniactwo, arogancja i morderstwa. Nie bêdê tolerowaæ twojej obecnoœci tutaj nawet chwili d³u¿ej!~
-@13   = ~Wiele ju¿ twa rasa nak³ama³a, ale ten jeden ostatni raz jestem gotowa ci uwierzyæ.  Spraw, aby ci z³odzieje siê wynieœli, a zadowolisz Sil, królow¹ tych pla¿y i fal.~
-@14   = ~Sprawiæ mi przyjemnoœæ, to jak sprawiæ j¹ wszystkim moim siostrom.  Pohamujemy nasz gniew na jakiœ czas. IdŸ ju¿..~
-@15   = ~Czekam na wieœci, ludzka istoto.  Czy intruzi zostali ju¿ zabici, b¹dŸ uciekli z mojego domu?~
-@16   = ~Jeszcze nie, Sil.  Daj mi jeszcze czas.~
-@17   = ~Piraci nie bêd¹ ciê ju¿ k³opotaæ.  By³em zmuszony ich zabiæ.~
-@18   = ~Nie Sil.  Ale wkrótce bêdziesz zadowolona.~
-@19   = ~Nie mnie decydowaæ o czasie.  Poœpiesz siê, zanim wiatr znów zmieni kierunek.~
-@20   = ~Oczekiwa³yœmy tego i nie czujemy ¿adnej straty po ich œmierci.  Nasze fale s¹ wreszcie wolne i zostaniecie za to sowicie wynagrodzeni.  IdŸcie na pó³noc.  Tam jest jaskinia, której ci bandyci szukali. WeŸcie z niej co tylko chcecie, ale miejcie baczenie na stra¿ników.~
-@21   = ~Zdradzone...  Wy, marne istoty l¹dowe, zawsze to robicie!  G³upcy! Koniec rozmów! KONIEC! Do walki!~
+@0    = ~Jesteœ jednym z tych, których widzia³y moje siostry razem z ludŸmi ze statków! Ostrzega³am was ju¿ i nie zamierzamy d³u¿ej cierpieæ z powodu waszych morderstw i napaœci na nas.~
+        ~Jesteœ jedn¹ z tych, których widzia³y moje siostry razem z ludŸmi ze statków! Ostrzega³am was ju¿ i nie zamierzamy d³u¿ej cierpieæ z powodu waszych morderstw i napaœci na nas.~
+@1    = ~Jestem tu z mojej w³asnej woli i nikt nie bêdzie mi mówi³ co mam robiæ. Jeœli masz problem ze zrozumieniem tego, poczujesz mój gniew.~
+@2    = ~Czekaj! Nie szukam konfliktu. Co masz na myœli mówi¹c "morderstw i napaœci"?~
+@3    = ~O czym ty mówisz? Nigdy wczeœniej z tob¹ nie rozmawia³em.~
+        ~O czym ty mówisz? Nigdy wczeœniej z tob¹ nie rozmawia³am.~
+@4    = ~Ostrzegano mnie przed tob¹ i takimi jak ty. OdejdŸ, a nie stanie ci siê krzywda!~
+@5    = ~Nigdy nie by³eœ i nigdy nie bêdziesz tu mile widziany. To koniec moich ostrze¿eñ!~
+        ~Nigdy nie by³aœ i nigdy nie bêdziesz tu mile widziana. To koniec moich ostrze¿eñ!~
+@6    = ~K³amiesz i udajesz, ¿e nie masz z tym nic wspólnego. Moje siostry widzia³y ciê z tymi mordercami ze statku i z wie¿y.~
+@7    = ~Przychodz¹ tu szukaæ skarbów i bezwartoœciowych œwiecide³ek. Mówi³am ju¿ im, a teraz powiem tobie: nie ma tu ¿adnego skarbu prócz wiatru, piasku i morza. Wynoœ siê z naszego domu!~
+@8    = ~Jeœli chcesz, mogê przekazaæ twoje ostrze¿enie. S¹ bli¿si mi, ni¿ tobie i mog¹ wzi¹æ do siebie moje s³owa, podczas gdy ignoruj¹ twoje.~
+@9    = ~Skarb? Jeœli tak, to lepiej siê odsuñ, bo ju¿ traktujê go jako moj¹ kolejn¹ zdobycz.~
+@10   = ~To okropne. Pomogê ci pozbywaj¹c siê tych drani z tego miejsca raz na zawsze!~
+@11   = ~Nie interesuj¹ mnie wasze g³upie sprzeczki. Ja tylko badam te tereny.~
+@12   = ~Ob³uda, cwaniactwo, arogancja i morderstwa. Nie bêdê tolerowaæ twojej obecnoœci tutaj ani chwili d³u¿ej!~
+@13   = ~Wiele ju¿ twa rasa nak³ama³a, ale ten jeden ostatni raz jestem gotowa ci uwierzyæ. Spraw, aby ci z³odzieje siê wynieœli, a zadowolisz Sil, królow¹ tych pla¿y i fal.~
+@14   = ~Sprawiæ mi przyjemnoœæ, to jak sprawiæ j¹ wszystkim moim siostrom. Pohamujemy nasz gniew na jakiœ czas. IdŸ ju¿...~
+@15   = ~Czekam na wieœci, ludzka istoto. Czy intruzi zostali ju¿ zabici, b¹dŸ uciekli z mojego domu?~
+@16   = ~Jeszcze nie, Sil. Daj mi jeszcze czas.~
+@17   = ~Piraci nie bêd¹ ciê ju¿ k³opotaæ. By³em zmuszony ich zabiæ.~ ~Piraci nie bêd¹ ciê ju¿ k³opotaæ. By³am zmuszona ich zabiæ.~
+@18   = ~Nie, Sil, ale wkrótce bêdziesz zadowolona.~
+@19   = ~Nie mnie decydowaæ o czasie. Poœpiesz siê, zanim wiatr znów zmieni kierunek.~
+@20   = ~Oczekiwa³yœmy tego i nie czujemy ¿adnej straty po ich œmierci. Nasze fale s¹ wreszcie wolne i zostaniecie za to sowicie wynagrodzeni. IdŸcie na pó³noc. Tam jest jaskinia, której ci bandyci szukali. WeŸcie z niej co tylko chcecie, ale miejcie baczenie na stra¿ników.~
+@21   = ~Zdradzone... Wy, marne istoty l¹dowe, zawsze to robicie! G³upcy! Koniec rozmów! KONIEC! Do walki!~
