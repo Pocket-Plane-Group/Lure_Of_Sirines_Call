@@ -12,7 +12,7 @@ ALWAYS
 /* check for a ready SoD */
 
 ACTION_IF ((FILE_EXISTS ~dlc/sod-dlc.zip~) OR (FILE_EXISTS ~sod-dlc.zip~)) THEN BEGIN
-  FAIL ~Modmerge is required before mods can be installed on this game. Check the readme for more information and a link to download Modmerge.~
+  FAIL @1006
 END
 
 
@@ -44,7 +44,7 @@ END
 	END
 
 	ACTION_IF GAME_IS ~bg1 totsc~ THEN BEGIN
-		PRINT ~Baldur's Gate detected~
+		PRINT @1007
 		INCLUDE ~sirinescall/lib/g3_bg_cpmvars.tpa~
 		OUTER_SPRINT ~Lighthouse_bcs~ ~AR3600~
 		OUTER_SPRINT ~J#sirin1~ ~J#siribg~
@@ -65,7 +65,7 @@ END
 	/* BG:EE version! ---------------------- */
 	ACTION_IF GAME_IS ~bgee~ THEN BEGIN
 		/* Tell the player it is using bgee */
-		PRINT ~BG:EE detected...~
+		PRINT @1008
 		INCLUDE ~sirinescall/lib/g3_bgee_cpmvars.tpa~
 		INCLUDE ~sirinescall/lib/rr_tutubgt_addvars.tpa~
 		OUTER_SPRINT ~Lighthouse_bcs~ ~AR3600~
@@ -77,7 +77,7 @@ END
 	/* EET version! ---------------------- */
 	ACTION_IF GAME_IS ~eet~ THEN BEGIN
 		/* Tell the player it is using eet */
-		PRINT ~EET detected...~
+		PRINT @1009
 		INCLUDE ~EET/other/cpmvars/eet_cpmvars.tpa~
 		INCLUDE ~sirinescall/lib/rr_tutubgt_addvars.tpa~
 		OUTER_SPRINT ~Lighthouse_bcs~ ~BG3600~
@@ -95,7 +95,7 @@ END
 		UNLESS ~CD_STATE_NOTVALID~
 
 		ACTION_IF GAME_IS ~bg1 totsc~ THEN BEGIN
-			PRINT ~Baldur's Gate detected~
+			PRINT @1007
 			INCLUDE ~sirinescall/lib/c#_bg_npcjdlg.tpa~
 			APPEND ~action.ids~ ~160 ApplySpellRES(S:ResRef*,O:Target*)~       
 			UNLESS ~ApplySpellRES~
