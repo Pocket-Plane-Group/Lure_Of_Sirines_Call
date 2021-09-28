@@ -2,7 +2,7 @@ BACKUP ~sirinescall/backup~
 SUPPORT ~http://forums.pocketplane.net/index.php/topic,17901.0.html~ 
 //AUTHOR ~http://forums.pocketplane.net/index.php/topic,17901.0.html~ /* ~ghreyfain@pocketplane.net~ */
 
-VERSION ~v16.1~ 
+VERSION ~v16.2~ 
 
 README ~sirinescall/readme/sirine_readme.%LANGUAGE%.html~ ~sirinescall/readme/sirine_readme.english.html~
 
@@ -1076,9 +1076,9 @@ END
 
 BEGIN @1003 /* ~Extended Lighthouse Area~ */
 LABEL "SirinesCall-ExtendedLighthouseArea"
-REQUIRE_PREDICATE GAME_IS ~bg1 totsc bgt bgee eet~ ~Your game is not compatible.~
+REQUIRE_PREDICATE GAME_IS ~bg1 totsc bgt bgee eet~ @1011 /* ~Your game is not compatible.~ */
 //REQUIRE_PREDICATE FILE_EXISTS_IN_GAME ~j#hall.are~ ~Lure of the Sirine's Call main component needs to be installed.~
-  REQUIRE_COMPONENT ~SiriensCall/setup-sirinescall.tp2~ 0 ~You'll have to install Lure of the Sirine's Call before~
+  REQUIRE_COMPONENT ~SiriensCall/setup-sirinescall.tp2~ 0 @1010 /* ~Lure of the Sirine's Call main component needs to be installed.~ */
 
 //List of creatures, which are looking bad on Night areas
 ACTION_IF !GAME_IS ~tutu tutu_totsc~ BEGIN
