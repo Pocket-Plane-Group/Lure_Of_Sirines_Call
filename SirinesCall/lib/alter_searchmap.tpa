@@ -2,18 +2,19 @@ DEFINE_ACTION_FUNCTION ~ALTER_SEARCHMAP~
 	INT_VAR
 
 	STR_VAR
-	path_to_2da_file = ~~ // full path to the *changes.2da file containing your icons, e.g. ~mymod/bam/AR3700SR_changes_ee.2da~
+	path_to_2da_file = ~~ // full path to the *changes.2da file, e.g. ~mymod/bmp/AR3700SR_changes_ee.2da~
 	areaname = ~~ 		  // area name, e.g. ~AR3700~
+	output_path = ~override~
+	type = ~SR~ // SR searchmap; HT heightmap; LM LN lightmap
 
 	RET
 
 BEGIN
-	PRINT ~%path_to_2da_file% - %areaname%~ 
 	COPY ~%path_to_2da_file%~ ~%path_to_2da_file%~
 		READ_2DA_ENTRIES_NOW ~newpixelarray~ 4
 		COUNT_2DA_ROWS 4 ~pixelnumber~
 		
-	COPY_EXISTING ~%areaname%SR.bmp~ ~override~
+	COPY_EXISTING ~%areaname%%type%.bmp~ ~%output_path%~
 		FOR (cnt=0; cnt<pixelnumber; cnt=cnt+1) BEGIN
 			READ_2DA_ENTRY_FORMER ~newpixelarray~ cnt 0 ~offset~
 			READ_BYTE ~offset~ ~oldpixel~

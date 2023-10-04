@@ -1258,260 +1258,186 @@ BUT_ONLY
 
 
 
-
-/* bgee, also no name change but use of pvrz-files */
-ACTION_IF GAME_IS ~bgee~ BEGIN
-
-	COPY_EXISTING ~AR3600LM.bmp~ ~override~
-	COPY_EXISTING ~AR3600HT.bmp~ ~override~
-//	COPY ~sirinescall/base/bmp/AR3600SR.bmp~ ~override/BG3600SR.bmp~
-	LAF ALTER_SEARCHMAP
-		STR_VAR
-		path_to_2da_file = ~sirinescall/base/bmp/AR3600SR_changes.2da~ // full path to the *changes.2da file containing your icons, e.g. ~mymod/bam/AR3700SR_changes_ee.2da~
-		areaname = EVAL ~%Lighthouse%~ 							  		 // area name, e.g. ~AR3700~
-	END	
-	
-	COPY ~sirinescall/base/bmp/AR3600LN.bmp~ ~override~
-
-	COPY ~sirinescall/base/Lighthouse_ee~ ~override~
-
-/*
-	COPY_EXISTING ~AR3600LM.bmp~ ~sirinescall/bif/WA%Lighthouse%~
-	COPY_EXISTING ~AR3600HT.bmp~ ~sirinescall/bif/WA%Lighthouse%~
-
-	COPY ~sirinescall/base/bmp~ ~sirinescall/bif/WA%Lighthouse%~
-	COPY ~sirinescall/base/pvrz~ ~sirinescall/bif/WA%Lighthouse%~
-	COPY ~sirinescall/base/wed_ee~ ~sirinescall/bif/WA%Lighthouse%~
-
-	LAF HANDLE_TILECONV
-				STR_VAR
-					input_path = EVAL ~sirinescall/base/mbc/%ee-folder%~
-					output_path	  = EVAL ~sirinescall/bif/WA%Lighthouse%~
-	END
-
-	LAF HANDLE_TILECONV
-				STR_VAR
-					input_path = EVAL ~sirinescall/base/mbc/%ee-folder%/n~
-					output_path	  = EVAL ~sirinescall/bif/WA%Lighthouse%~
-	END
-
-	LAF HANDLE_TILECONV
-				STR_VAR
-					input_path = EVAL ~sirinescall/base/tis~
-					output_path	  = EVAL ~sirinescall/bif/WA%Lighthouse%~
-	END
-*/
-
-END
-
 /* eet: pvrz-files, but name change necessary (also inside the wed-file) */
-ACTION_IF GAME_IS ~eet~ BEGIN
+// everything should be biffed for compatibility with bggo mod
+ACTION_IF GAME_IS ~eet bgee~ BEGIN
 
-	COPY_EXISTING ~BG3600LM.bmp~ ~override~
-	COPY_EXISTING ~BG3600HT.bmp~ ~override~
-//	COPY ~sirinescall/base/bmp/AR3600SR.bmp~ ~override/BG3600SR.bmp~
+	MKDIR ~sirinescall/bif~
+	MKDIR ~sirinescall/bif/WA%Lighthouse%~
+
+	// bmp files
+	COPY_EXISTING ~%Lighthouse%LM.bmp~ ~sirinescall/bif/WA%Lighthouse%~
+	COPY_EXISTING ~%Lighthouse%HT.bmp~ ~sirinescall/bif/WA%Lighthouse%~
+
+	ACTION_IF FILE_EXISTS ~override/%Lighthouse%SR.bmp~ BEGIN
+		DELETE ~override/%Lighthouse%SR.bmp~
+	END
 	LAF ALTER_SEARCHMAP
 		STR_VAR
 		path_to_2da_file = ~sirinescall/base/bmp/AR3600SR_changes.2da~ // full path to the *changes.2da file containing your icons, e.g. ~mymod/bam/AR3700SR_changes_ee.2da~
 		areaname = EVAL ~%Lighthouse%~ 							  		 // area name, e.g. ~AR3700~
-	END	
+		output_path	= EVAL ~sirinescall/bif/WA%Lighthouse%~ // output directory
+	END
+
+	COPY ~sirinescall/base/bmp/AR3600LN.bmp~ ~sirinescall/bif/WA%Lighthouse%/%Lighthouse%LN.bmp~
 	
-	COPY ~sirinescall/base/bmp/AR3600LN.bmp~ ~override/BG3600LN.bmp~
-
-ACTION_BASH_FOR ~sirinescall/base/Lighthouse_ee~ ~A3600.*\.PVRZ~ BEGIN
-  OUTER_PATCH_SAVE dest_file "%BASH_FOR_FILE%" BEGIN
-    REPLACE_TEXTUALLY ~A\(3600.*\.PVRZ\)~ ~B\1~
-  END
-  COPY ~%BASH_FOR_FILESPEC%~ ~override/%dest_file%~
-END
-
- COPY ~sirinescall/base/Lighthouse_ee/AR3600.MOS~ ~override/BG3600.MOS~
- COPY ~sirinescall/base/Lighthouse_ee/AR3600.TIS~ ~override/BG3600.TIS~
- COPY ~sirinescall/base/Lighthouse_ee/AR3600.WED~ ~override/BG3600.WED~
-
- COPY ~sirinescall/base/Lighthouse_ee/AR3600N.MOS~ ~override/BG3600N.MOS~
- COPY ~sirinescall/base/Lighthouse_ee/AR3600N.TIS~ ~override/BG3600N.TIS~
- COPY ~sirinescall/base/Lighthouse_ee/AR3600N.WED~ ~override/BG3600N.WED~
-
- COPY_EXISTING ~%Lighthouse%.wed~ ~override~
-	WRITE_EVALUATED_ASCII 0x24 ~%Lighthouse%~ #6
- COPY_EXISTING ~%Lighthouse%N.wed~ ~override~
-	WRITE_EVALUATED_ASCII 0x24 ~%Lighthouse%N~ #6
-
-/*
-	MKDIR ~sirinescall/bif/tmp~
-
-
-	COPY_EXISTING ~BG3600LM.bmp~ ~sirinescall/bif/WA%Lighthouse%~
-	COPY_EXISTING ~BG3600HT.bmp~ ~sirinescall/bif/WA%Lighthouse%~
-	COPY ~sirinescall/base/bmp/AR3600SR.bmp~ ~sirinescall/bif/WA%Lighthouse%/BG3600SR.bmp~
-	COPY ~sirinescall/base/bmp/AR3600LN.bmp~ ~sirinescall/bif/WA%Lighthouse%/BG3600LN.bmp~
-
-	ACTION_BASH_FOR ~sirinescall/base/pvrz~ ~A3600.*\.PVRZ~ BEGIN
-	  OUTER_PATCH_SAVE dest_file "%BASH_FOR_FILE%" BEGIN
-	    REPLACE_TEXTUALLY ~A\(3600.*\.PVRZ\)~ ~B\1~
-	  END
-	  COPY ~%BASH_FOR_FILESPEC%~ ~sirinescall/bif/WA%Lighthouse%/%dest_file%~
- 	END
-
-	LAF HANDLE_TILECONV
-				STR_VAR
-					input_path = EVAL ~sirinescall/base/mbc/%ee-folder%~
-					output_path	  = EVAL ~sirinescall/bif/tmp~
+	//pvrz + tis
+	ACTION_IF GAME_IS ~eet~ BEGIN
+		ACTION_BASH_FOR ~sirinescall/base/Lighthouse_ee~ ~A3600.*\.PVRZ~ BEGIN
+			OUTER_PATCH_SAVE dest_file "%BASH_FOR_FILE%" BEGIN
+				REPLACE_TEXTUALLY ~A\(3600.*\.PVRZ\)~ ~B\1~
+			END
+		COPY ~%BASH_FOR_FILESPEC%~ ~sirinescall/bif/WA%Lighthouse%/%dest_file%~
+		END
+		COPY ~sirinescall/base/Lighthouse_ee/AR3600.TIS~ ~sirinescall/bif/WA%Lighthouse%/%Lighthouse%.TIS~
+		COPY ~sirinescall/base/Lighthouse_ee/AR3600N.TIS~ ~sirinescall/bif/WA%Lighthouse%/%Lighthouse%N.TIS~
+	END
+	
+	ACTION_IF GAME_IS ~bgee~ BEGIN
+		COPY ~sirinescall/base/Lighthouse_ee~ ~sirinescall/bif/WA%Lighthouse%~
 	END
 
-	LAF HANDLE_TILECONV
-				STR_VAR
-					input_path = EVAL ~sirinescall/base/mbc/%ee-folder%/n~
-					output_path	  = EVAL ~sirinescall/bif/tmp~
+	// mos files
+	COPY ~sirinescall/base/Lighthouse_ee/AR3600.MOS~ ~sirinescall/bif/WA%Lighthouse%/%Lighthouse%.MOS~
+	COPY ~sirinescall/base/Lighthouse_ee/AR3600N.MOS~ ~sirinescall/bif/WA%Lighthouse%/%Lighthouse%N.MOS~
+	
+	ACTION_IF FILE_EXISTS ~override/%Lighthouse%.wed~ BEGIN
+		DELETE ~override/%Lighthouse%.wed~
 	END
-
-
-	MOVE + ~sirinescall/bif/tmp/AR3600.MOS~ ~sirinescall/bif/WA%Lighthouse%/BG3600.MOS~
-	MOVE + ~sirinescall/bif/tmp/AR3600N.MOS~ ~sirinescall/bif/WA%Lighthouse%/BG3600N.MOS~
-
-	COPY ~sirinescall/base/pvrz/AR3600.TIS~ ~sirinescall/bif/WA%Lighthouse%/BG3600.TIS~
-	COPY ~sirinescall/base/pvrz/AR3600N.TIS~ ~sirinescall/bif/WA%Lighthouse%/BG3600N.TIS~
-
-	COPY ~sirinescall/base/wed_ee/AR3600.WED~ ~sirinescall/bif/WA%Lighthouse%/BG3600.WED~
+	
+	// wed files
+	COPY ~sirinescall/base/Lighthouse_ee/AR3600.WED~ ~sirinescall/bif/WA%Lighthouse%/%Lighthouse%.WED~
 		WRITE_EVALUATED_ASCII 0x24 ~%Lighthouse%~ #6
-	COPY ~sirinescall/base/wed_ee/AR3600N.WED~ ~sirinescall/bif/WA%Lighthouse%/BG3600N.WED~
+	
+	COPY ~sirinescall/base/Lighthouse_ee/AR3600N.WED~ ~sirinescall/bif/WA%Lighthouse%/%Lighthouse%N.WED~
 		WRITE_EVALUATED_ASCII 0x24 ~%Lighthouse%N~ #6
-
-
+	
+	// overlay tis files
 	LAF HANDLE_TILECONV
 				STR_VAR
 					input_path = EVAL ~sirinescall/base/tis~
 					output_path	  = EVAL ~sirinescall/bif/WA%Lighthouse%~
 	END
-	LAF REMOVE_DIRECTORY STR_VAR dir_name = EVAL ~sirinescall/bif/tmp~ END
-*/
+	
+	// biffing
+	MAKE_BIFF ~WA%Lighthouse%~ BEGIN ~sirinescall/bif/WA%Lighthouse%~ ~^.*$~ END
+	
+	ACTION_FOR_EACH var IN bmp mos tis wed pvrz BEGIN
+		ACTION_BASH_FOR ~sirinescall/bif/WA%Lighthouse%~ ~^.+\.%var%$~ BEGIN
+			DELETE +  ~%BASH_FOR_FILESPEC%~
+		END
+	END
+	
+	LAF REMOVE_DIRECTORY STR_VAR dir_name = EVAL ~sirinescall/bif/WA%Lighthouse%~ END
+	
+	LAF REMOVE_DIRECTORY STR_VAR dir_name = ~sirinescall/bif~ END
+
+
 END
 
 ACTION_IF GAME_IS ~bg1 totsc bgt tutu tutu_totsc~ BEGIN
 
-MKDIR ~sirinescall/bif~
-
-MKDIR ~sirinescall/bif/WA%Lighthouse%~
-
-//Install the day area for bg1, totsc which doesn't need filename changes
-ACTION_IF GAME_IS ~bg1 totsc~ BEGIN
-	COPY_EXISTING ~%Lighthouse%LM.bmp~ ~sirinescall/bif/WA%Lighthouse%~
-	COPY_EXISTING ~%Lighthouse%HT.bmp~ ~sirinescall/bif/WA%Lighthouse%~
-	COPY ~sirinescall/base/wed/%Lighthouse%.wed~ ~sirinescall/bif/WA%Lighthouse%~
-	COPY ~sirinescall/base/bmp/%Lighthouse%SR.bmp~ ~sirinescall/bif/WA%Lighthouse%~
+	MKDIR ~sirinescall/bif~
+	MKDIR ~sirinescall/bif/WA%Lighthouse%~
 	
-	LAF HANDLE_TILECONV
+	//Install the day area for bg1, totsc which doesn't need filename changes
+	ACTION_IF GAME_IS ~bg1 totsc~ BEGIN
+		
+		// SR HT LM maps
+		COPY_EXISTING ~%Lighthouse%LM.bmp~ ~sirinescall/bif/WA%Lighthouse%~
+		COPY_EXISTING ~%Lighthouse%HT.bmp~ ~sirinescall/bif/WA%Lighthouse%~
+		COPY ~sirinescall/base/Lighthouse_bg1/%Lighthouse%.wed~ ~sirinescall/bif/WA%Lighthouse%~
+		ACTION_IF FILE_EXISTS ~override/BG3600SR.bmp~ BEGIN
+			DELETE ~override/BG3600SR.bmp~
+		END
+		LAF ALTER_SEARCHMAP
+			STR_VAR
+			path_to_2da_file = ~sirinescall/base/bmp/AR3600SR_changes.2da~ // full path to the *changes.2da file containing your icons, e.g. ~mymod/bam/AR3700SR_changes_ee.2da~
+			areaname = EVAL ~%Lighthouse%~ 							  		 // area name, e.g. ~AR3700~
+			output_path	= EVAL ~sirinescall/bif/WA%Lighthouse%~ // output directory
+		END	
+		
+		// tis & mbc
+		LAF HANDLE_TILECONV
+					STR_VAR
+						input_path = EVAL ~sirinescall/base/Lighthouse_bg1~
+						output_path	  = EVAL ~sirinescall/bif/WA%Lighthouse%~
+		END
+		
+		// wed 
+		COPY ~sirinescall/base/Lighthouse_bg1/AR3600.WED~ ~sirinescall/bif/tmp~
+	
+	END
+
+
+	//Install Day and Night areas for BGT, Tutu, Tutu_totsc: the tis and wed files are converted during the installation through tis2bg2 to safe space... ;)
+	ACTION_IF GAME_IS ~bgt tutu tutu_totsc~ BEGIN
+		
+		MKDIR ~sirinescall/bif/tmp~
+	
+		// SR HT LM maps
+		COPY_EXISTING ~%Lighthouse%LM.bmp~ ~sirinescall/bif/WA%Lighthouse%~
+		COPY_EXISTING ~%Lighthouse%HT.bmp~ ~sirinescall/bif/WA%Lighthouse%~
+		ACTION_IF FILE_EXISTS ~override/%Lighthouse%SR.bmp~ BEGIN
+			DELETE ~override/%Lighthouse%SR.bmp~
+		END
+		LAF ALTER_SEARCHMAP
+			STR_VAR
+			path_to_2da_file = ~sirinescall/base/bmp/AR3600SR_changes.2da~ // full path to the *changes.2da file containing your icons, e.g. ~mymod/bam/AR3700SR_changes_ee.2da~
+			areaname = EVAL ~%Lighthouse%~ 							  		 // area name, e.g. ~AR3700~
+			output_path	= EVAL ~sirinescall/bif/WA%Lighthouse%~ // output directory
+		END	
+		COPY ~sirinescall/base/bmp/AR3600LN.bmp~ ~sirinescall/bif/WA%Lighthouse%/%Lighthouse%LN.bmp~
+		
+		// tis & mbc 
+		LAF HANDLE_TILECONV
+					STR_VAR
+						input_path = EVAL ~sirinescall/base/Lighthouse_bgt~
+						output_path	  = EVAL ~sirinescall/bif/tmp~
+		END
+		
+		// overlay tis files
+		LAF HANDLE_TILECONV
 				STR_VAR
-					input_path = EVAL ~sirinescall/base/mbc/%ee-folder%~
+					input_path = EVAL ~sirinescall/base/tis~
 					output_path	  = EVAL ~sirinescall/bif/WA%Lighthouse%~
-	END
+		END
+		
+		// wed 
+		COPY ~sirinescall/base/Lighthouse_bgt/AR3600.WED~ ~sirinescall/bif/tmp~
+			WRITE_EVALUATED_ASCII 0x24 ~%Lighthouse_tis%~ #6
+		COPY ~sirinescall/base/Lighthouse_bgt/AR3600N.WED~ ~sirinescall/bif/tmp~
+			WRITE_EVALUATED_ASCII 0x24 ~%Lighthouse_tis%N~ #6
 	
-	LAF HANDLE_TILECONV
-				STR_VAR
-					input_path = EVAL ~sirinescall/base/tbcD~
-					output_path	  = EVAL ~sirinescall/bif/WA%Lighthouse%~
-	END
-
-END
-
-
-//Install Day and Night areas for BGT, Tutu, Tutu_totsc: the tis and wed files are converted during the installation through tis2bg2 to safe space... ;)
-ACTION_IF GAME_IS ~bgt tutu tutu_totsc~ BEGIN
-
-
-
-	COPY_EXISTING ~%Lighthouse%LM.bmp~ ~sirinescall/bif/WA%Lighthouse%~
-	COPY_EXISTING ~%Lighthouse%HT.bmp~ ~sirinescall/bif/WA%Lighthouse%~
-	//	COPY ~sirinescall/base/bmp/AR3600SR.bmp~ ~override/BG3600SR.bmp~
-	LAF ALTER_SEARCHMAP
-		STR_VAR
-		path_to_2da_file = ~sirinescall/base/bmp/AR3600SR_changes.2da~ // full path to the *changes.2da file containing your icons, e.g. ~mymod/bam/AR3700SR_changes_ee.2da~
-		areaname = EVAL ~%Lighthouse%~ 							  		 // area name, e.g. ~AR3700~
-	END	
-	COPY_EXISTING ~%Lighthouse%SR.bmp~ ~sirinescall/bif/WA%Lighthouse%/%Lighthouse%SR.bmp~
-	COPY ~sirinescall/base/bmp/AR3600LN.bmp~ ~sirinescall/bif/WA%Lighthouse%/%Lighthouse%LN.bmp~
+		// renaming
+		MOVE + ~sirinescall/bif/tmp/AR3600.tis~ ~sirinescall/bif/WA%Lighthouse%/%Lighthouse_tis%.tis~
+		MOVE + ~sirinescall/bif/tmp/AR3600N.tis~ ~sirinescall/bif/WA%Lighthouse%/%Lighthouse_tis%N.tis~
+		MOVE + ~sirinescall/bif/tmp/AR3600.WED~ ~sirinescall/bif/WA%Lighthouse%/%Lighthouse%.WED~
+		MOVE + ~sirinescall/bif/tmp/AR3600N.WED~ ~sirinescall/bif/WA%Lighthouse%/%Lighthouse%N.WED~
+		MOVE + ~sirinescall/bif/tmp/AR3600.mos~ ~sirinescall/bif/WA%Lighthouse%/%Lighthouse%.mos~
+		MOVE + ~sirinescall/bif/tmp/AR3600N.mos~ ~sirinescall/bif/WA%Lighthouse%/%Lighthouse%N.mos~
+		
+		
+		ACTION_FOR_EACH var IN bmp mos tis wed exe BEGIN
+			ACTION_BASH_FOR ~sirinescall/bif/tmp~ ~^.+\.%var%$~ BEGIN
+				DELETE +  ~%BASH_FOR_FILESPEC%~
+			END
+		END
 	
-	MKDIR ~sirinescall/bif/tmp~
-	
-//	COPY ~sirinescall/base/wed~ ~sirinescall/bif/tmp~
-
-	COPY ~sirinescall/base/wed/AR3600.WED~ ~sirinescall/bif/tmp~
-		WRITE_EVALUATED_ASCII 0x24 ~%Lighthouse_tis%~ #6
-	COPY ~sirinescall/base/wed/AR3600N.WED~ ~sirinescall/bif/tmp~
-		WRITE_EVALUATED_ASCII 0x24 ~%Lighthouse_tis%N~ #6
-
-	
-	LAF HANDLE_TILECONV
-				STR_VAR
-					input_path = EVAL ~sirinescall/base/tbcD~
-					output_path	  = EVAL ~sirinescall/bif/tmp~
-	END
-	
-	LAF HANDLE_TILECONV
-				STR_VAR
-					input_path = EVAL ~sirinescall/base/tbcN~
-					output_path	  = EVAL ~sirinescall/bif/tmp~
+		LAF REMOVE_DIRECTORY STR_VAR dir_name = EVAL ~sirinescall/bif/tmp~ END
 	END
 
-   ACTION_IF GAME_IS ~tutu tutu_totsc~ THEN BEGIN
-	MOVE + ~sirinescall/bif/tmp/AR3600.tis~ ~sirinescall/bif/WA%Lighthouse%/%Lighthouse_tis%.tis~
-	MOVE + ~sirinescall/bif/tmp/AR3600N.tis~ ~sirinescall/bif/WA%Lighthouse%/%Lighthouse_tis%N.tis~
-	MOVE + ~sirinescall/bif/tmp/AR3600.WED~ ~sirinescall/bif/WA%Lighthouse%/%Lighthouse%.WED~
-	MOVE + ~sirinescall/bif/tmp/AR3600N.WED~ ~sirinescall/bif/WA%Lighthouse%/%Lighthouse%N.WED~
-   END
-
-   ACTION_IF GAME_IS ~bgt~ THEN BEGIN
-	COPY + ~%tis2bg2%~ ~sirinescall/bif/tmp~
-	OUTER_SPRINT tis2bg2 ~sirinescall%os_slash%bif%os_slash%tmp%os_slash%tis2bg2%exe%~
+	//Biff the tis/wed/bmp/mos files
+	MAKE_BIFF ~WA%Lighthouse%~ BEGIN ~sirinescall/bif/WA%Lighthouse%~ ~^.*$~ END
 	
-	AT_NOW ~%tis2bg2% -d -h -s "AR3600" "..%os_slash%WA%Lighthouse%%os_slash%%Lighthouse_tis%"~
-	
-	AT_NOW ~%tis2bg2% -d -h -s "AR3600N" "..%os_slash%WA%Lighthouse%%os_slash%%Lighthouse_tis%N"~
-	
-	DELETE + ~%tis2bg2%~
-   END
-
-	
-	MOVE + ~sirinescall/bif/tmp/yswave.tis~ ~sirinescall/bif/WA%Lighthouse%~
-	MOVE + ~sirinescall/bif/tmp/yswaver.tis~ ~sirinescall/bif/WA%Lighthouse%~
-	
-	LAF HANDLE_TILECONV
-				STR_VAR
-					input_path = EVAL ~sirinescall/base/mbc/%ee-folder%/n~
-					output_path	  = EVAL ~sirinescall/bif/tmp~
-	END
-	LAF HANDLE_TILECONV
-				STR_VAR
-					input_path = EVAL ~sirinescall/base/mbc/%ee-folder%~
-					output_path	  = EVAL ~sirinescall/bif/tmp~
-	END
-	
-	MOVE + ~sirinescall/bif/tmp/AR3600.mos~ ~sirinescall/bif/WA%Lighthouse%/%Lighthouse%.mos~
-	MOVE + ~sirinescall/bif/tmp/AR3600N.mos~ ~sirinescall/bif/WA%Lighthouse%/%Lighthouse%N.mos~
-	
-	
-	
-	ACTION_FOR_EACH var IN bmp mos tis wed exe BEGIN
-		ACTION_BASH_FOR ~sirinescall/bif/tmp~ ~^.+\.%var%$~ BEGIN
+	ACTION_FOR_EACH var IN bmp mos tis wed BEGIN
+		ACTION_BASH_FOR ~sirinescall/bif/WA%Lighthouse%~ ~^.+\.%var%$~ BEGIN
 			DELETE +  ~%BASH_FOR_FILESPEC%~
 		END
 	END
-
-	LAF REMOVE_DIRECTORY STR_VAR dir_name = EVAL ~sirinescall/bif/tmp~ END
-END
-
-//Biff the tis/wed/bmp/mos files
-MAKE_BIFF ~WA%Lighthouse%~ BEGIN ~sirinescall/bif/WA%Lighthouse%~ ~^.*$~ END
-
-ACTION_FOR_EACH var IN bmp mos tis wed BEGIN
-	ACTION_BASH_FOR ~sirinescall/bif/WA%Lighthouse%~ ~^.+\.%var%$~ BEGIN
-		DELETE +  ~%BASH_FOR_FILESPEC%~
-	END
-END
-
-LAF REMOVE_DIRECTORY STR_VAR dir_name = EVAL ~sirinescall/bif/WA%Lighthouse%~ END
-
-LAF REMOVE_DIRECTORY STR_VAR dir_name = ~sirinescall/bif~ END
+	
+	LAF REMOVE_DIRECTORY STR_VAR dir_name = EVAL ~sirinescall/bif/WA%Lighthouse%~ END
+	
+	LAF REMOVE_DIRECTORY STR_VAR dir_name = ~sirinescall/bif~ END
 
 END
