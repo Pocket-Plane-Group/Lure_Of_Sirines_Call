@@ -1,0 +1,20 @@
+COPY_EXISTING ~J#Ligh.are~ ~override~
+	//Add candles and torches
+	PATCH_DEFINE_ARRAY x_coord BEGIN 208 218 272 296 257 388 393 398 403 408 END
+	PATCH_DEFINE_ARRAY y_coord BEGIN 209 168 156 198 215 328 318 323 331 322 END
+	PATCH_PHP_EACH x_coord AS index => x BEGIN
+		LPF fj_are_structure
+		INT_VAR
+			fj_loc_x = $x_coord("%index%")
+			fj_loc_y = $y_coord("%index%")
+			fj_schedule = 0b111111111111111111111111 //Hours 0.00 - 24.00
+			fj_flags = 0b00000000000000000001000001000011	// Visible, blend colours, not covered by wall, don't remove in combat
+			STR_VAR
+			fj_structure_type = animation
+			fj_name = FLAME2S
+			fj_bam_resref = FLAME2S //bgrd
+		END
+	END
+	CLEAR_ARRAY x_coord
+	CLEAR_ARRAY y_coord
+

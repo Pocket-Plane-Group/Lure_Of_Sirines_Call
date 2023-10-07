@@ -297,6 +297,10 @@ EXTEND_TOP ~%Lighthouse_bcs%.bcs~ ~sirinescall/scriptsar/_AR3600.baf~
 COPY ~sirinescall/areas/storage~ ~override~
      ~sirinescall/areas/lighthouse~ ~override~
      ~sirinescall/areas/longhall~ ~override~
+INCLUDE ~%MOD_FOLDER%/areas/J#Lig2_are.tpa~
+INCLUDE ~%MOD_FOLDER%/areas/J#Ligh_are.tpa~
+INCLUDE ~%MOD_FOLDER%/areas/J#Hall_are.tpa~
+INCLUDE ~%MOD_FOLDER%/areas/J#Stor_are.tpa~
 
 
 /*  ACTION_IF GAME_IS ~tutu tutu_totsc~ THEN BEGIN
