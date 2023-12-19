@@ -234,6 +234,9 @@ LANGUAGE ~Polski (Polish) - by Regis~
 LANGUAGE ~D¢¤¤ˆŠ‚ (Russian) - Badgert, iopden & aerie.ru~
          ~russian~
          ~sirinescall/translations/russian/setup-sirinescall.tra~
+LANGUAGE ~Simplified Chinese~
+         ~schinese~
+         ~sirinescall/translations/schinese/setup-sirinescall.TRA~
 
 BEGIN @0
 LABEL "SirinesCall-Main"
