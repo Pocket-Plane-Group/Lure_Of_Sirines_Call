@@ -2,7 +2,7 @@ BACKUP ~sirinescall/backup~
 SUPPORT ~http://forums.pocketplane.net/index.php/topic,17901.0.html~ 
 //AUTHOR ~http://forums.pocketplane.net/index.php/topic,17901.0.html~ /* ~ghreyfain@pocketplane.net~ */
 
-VERSION ~v16.3~ 
+VERSION ~v16.4~ 
 
 README ~sirinescall/readme/sirine_readme.%LANGUAGE%.html~ ~sirinescall/readme/sirine_readme.english.html~
 
