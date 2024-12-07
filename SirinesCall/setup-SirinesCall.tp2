@@ -144,7 +144,7 @@ END
 		LAF autotra_workaround END
 
 		ACTION_DEFINE_ARRAY tra#reload BEGIN setup-sirinescall END
-		ACTION_DEFINE_ARRAY tra#noconvert BEGIN SETUP-osx SETUP-unix SETUP-win32 END
+		ACTION_DEFINE_ARRAY tra#noconvert BEGIN install END
 
 		LAF HANDLE_CHARSETS
 			INT_VAR
@@ -236,7 +236,7 @@ LANGUAGE ~D¢¤¤ˆŠ‚ (Russian) - Badgert, iopden & aerie.ru~
          ~sirinescall/translations/russian/setup-sirinescall.tra~
 LANGUAGE ~Simplified Chinese~
          ~schinese~
-         ~sirinescall/translations/schinese/setup-%WEIDU_OS%.TRA~
+         ~sirinescall/translations/schinese/install.TRA~
 
 BEGIN @0
 LABEL "SirinesCall-Main"
