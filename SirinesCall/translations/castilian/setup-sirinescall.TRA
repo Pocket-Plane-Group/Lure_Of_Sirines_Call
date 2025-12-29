@@ -1,4 +1,4 @@
-@0 = ~La seduccion de la Llamada de la Sirena~ 
+@0 = ~La seduccion de el canto de la sirena~ 
 @1 = ~Brennan~
 @2 = ~Viejo~ 
 @3 = ~Pirata~
@@ -8,15 +8,15 @@
 @1002  = ~Este mod debe ser instalado en el directorio del BG2, Tutu, EasyTutu, o BGT, luego de la conversion a Tutu/BGT.~
 
 /* new for v16.1 */
-@1003  = ~Extended Lighthouse Area~
-@1004  = ~The mod needs to be installed after EET_End.~
-@1005  = ~This mod is not compatible with your game.~
+@1003  = ~Area del faro extendida~
+@1004  = ~El mod debe instalarse despues de EET_End.~
+@1005  = ~Este mod no es compatible con tu juego.~
 
 /* new for v16.2 */
-@1006 = ~Modmerge is required before mods can be installed on this game. Check the readme for more information and a link to download Modmerge.~
-@1007 = ~Baldur's Gate detected.~
-@1008 = ~BG:EE detected...~
-@1009 = ~EET detected...~
-@1010 = ~Lure of the Sirine's Call main component needs to be installed.~
-@1011 = ~Your game is not compatible.~
+@1006 = ~Se necesita Modmerge para poder instalar mods en este juego. Consulta el archivo readme para obtener más informacion y un enlace para descargar Modmerge.~
+@1007 = ~Baldur's Gate detectado...~
+@1008 = ~BG:EE detectado...~
+@1009 = ~EET detectado...~
+@1010 = ~Es necesario instalar el componente principal de la seduccion de el canto de la sirena.~
+@1011 = ~Tu juego no es compatible.~
 
