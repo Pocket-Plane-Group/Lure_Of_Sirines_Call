@@ -1329,7 +1329,7 @@ ACTION_IF GAME_IS ~eet bgee~ BEGIN
 	
 	// biffing
 	MAKE_BIFF ~WA%Lighthouse%~ BEGIN ~sirinescall/bif/WA%Lighthouse%~ ~^.*$~ END
-	
+	//COPY ~sirinescall/bif/WA%Lighthouse%~ ~override~
 	ACTION_FOR_EACH var IN bmp mos tis wed pvrz BEGIN
 		ACTION_BASH_FOR ~sirinescall/bif/WA%Lighthouse%~ ~^.+\.%var%$~ BEGIN
 			DELETE +  ~%BASH_FOR_FILESPEC%~
@@ -1340,7 +1340,9 @@ ACTION_IF GAME_IS ~eet bgee~ BEGIN
 	
 	LAF REMOVE_DIRECTORY STR_VAR dir_name = ~sirinescall/bif~ END
 
-
+// very suspect error, when the night tis is in a bif file. So we copied to the override folder
+// and now it works again
+	COPY ~sirinescall/base/Lighthouse_ee/AR3600N.TIS~ ~override/%Lighthouse%N.TIS~
 END
 
 ACTION_IF GAME_IS ~bg1 totsc bgt tutu tutu_totsc~ BEGIN
