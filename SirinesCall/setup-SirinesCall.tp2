@@ -1342,6 +1342,7 @@ ACTION_IF GAME_IS ~eet bgee~ BEGIN
 
 // very suspect error, when the night tis is in a bif file. So we copied to the override folder
 // and now it works again
+	COPY ~sirinescall/base/Lighthouse_ee/AR3600.TIS~ ~override/%Lighthouse%.TIS~
 	COPY ~sirinescall/base/Lighthouse_ee/AR3600N.TIS~ ~override/%Lighthouse%N.TIS~
 END
 
